@@ -12,7 +12,7 @@ npm test -- --run
 
 更新本机实际部署：从后端仓库执行 `deploy/wsl2/deploy.ps1 -Service frontend -FrontendPath <本仓库绝对路径>`。服务仍使用 `Ubuntu-24.04` 的 Docker，入口为 `http://localhost:8080/avatar-mvp`；仅前端更新不重建或重启 API。若本仓库位于后端工作区的 `frontend/`，可省略 `-FrontendPath`。部署后需实测页面与 API 可访问性。
 
-前端的提交和推送只在本仓库中执行；不要在后端仓库强制添加 `frontend/`。默认分支为 `main`，`origin` 使用所有者指定的独立前端仓库地址。
+前端的提交和推送只在本仓库中执行；不要在后端仓库强制添加 `frontend/`。默认分支为 `main`，`origin` 为私有仓库 [Linyings/avatar-agent-frontend](https://github.com/Linyings/avatar-agent-frontend)。配套后端为 [Linyings/avatar-agent-backend](https://github.com/Linyings/avatar-agent-backend)。
 
 上游来源见 [UPSTREAM.json](UPSTREAM.json)，原始文档保留在 [docs/upstream-README.md](docs/upstream-README.md)。以下是保留的上游技术说明；其中产品名、域名和云发布方式不代表本项目的实际部署。原云发布 workflow 仅手动触发，本项目默认采用上述 WSL 部署入口。
 
