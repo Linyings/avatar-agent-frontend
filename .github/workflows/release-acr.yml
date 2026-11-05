@@ -1,0 +1,135 @@
+name: Legacy upstream cloud deployment (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-frontend
+  cancel-in-progress: true
+
+env:
+  IMAGE_REPOSITORY: narratoai-frontend
+
+jobs:
+  test:
+    name: Test and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --run
+
+      - name: Build frontend
+        run: npm run build
+
+  publish:
+    name: Publish Alibaba Cloud ACR image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Validate ACR configuration
+        env:
+          ALIYUN_REGISTRY: ${{ secrets.ALIYUN_REGISTRY }}
+          ALIYUN_REGISTRY_NAMESPACE: ${{ secrets.ALIYUN_REGISTRY_NAMESPACE }}
+          ALIYUN_REGISTRY_USERNAME: ${{ secrets.ALIYUN_REGISTRY_USERNAME }}
+          ALIYUN_REGISTRY_PASSWORD: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for name in ALIYUN_REGISTRY ALIYUN_REGISTRY_NAMESPACE ALIYUN_REGISTRY_USERNAME ALIYUN_REGISTRY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing GitHub secret: ${name}"
+              exit 1
+            fi
+          done
+
+      - name: Prepare image reference
+        id: image
+        env:
+          ALIYUN_REGISTRY: ${{ secrets.ALIYUN_REGISTRY }}
+          ALIYUN_REGISTRY_NAMESPACE: ${{ secrets.ALIYUN_REGISTRY_NAMESPACE }}
+        run: |
+          set -euo pipefail
+          short_sha="$(printf '%s' "$GITHUB_SHA" | cut -c1-7)"
+          repository="$(printf '%s/%s/%s' "$ALIYUN_REGISTRY" "$ALIYUN_REGISTRY_NAMESPACE" "$IMAGE_REPOSITORY" | tr '[:upper:]' '[:lower:]')"
+          echo "image=${repository}:sha-${short_sha}" >> "$GITHUB_OUTPUT"
+          echo "repository=${repository}" >> "$GITHUB_OUTPUT"
+          echo "short_sha=${short_sha}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to Alibaba Cloud ACR
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ secrets.ALIYUN_REGISTRY }}
+          username: ${{ secrets.ALIYUN_REGISTRY_USERNAME }}
+          password: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ steps.image.outputs.repository }}:sha-${{ steps.image.outputs.short_sha }}
+            ${{ steps.image.outputs.repository }}:latest
+          build-args: |
+            VITE_API_BASE_URL=
+            VITE_R2_BASE_URL=https://r2.narratoai.cn
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy production frontend
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
+
+      - name: Add production host key
+        env:
+          PRODUCTION_SSH_HOST: ${{ secrets.PRODUCTION_SSH_HOST }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "$PRODUCTION_SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Login server to ACR and deploy
+        env:
+          ALIYUN_REGISTRY: ${{ secrets.ALIYUN_REGISTRY }}
+          ALIYUN_REGISTRY_USERNAME: ${{ secrets.ALIYUN_REGISTRY_USERNAME }}
+          ALIYUN_REGISTRY_PASSWORD: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
+          PRODUCTION_SSH_HOST: ${{ secrets.PRODUCTION_SSH_HOST }}
+          PRODUCTION_SSH_USER: ${{ secrets.PRODUCTION_SSH_USER }}
+          ALIYUN_REGISTRY_NAMESPACE: ${{ secrets.ALIYUN_REGISTRY_NAMESPACE }}
+        run: |
+          set -euo pipefail
+          short_sha="$(printf '%s' "$GITHUB_SHA" | cut -c1-7)"
+          image="$(printf '%s/%s/%s:sha-%s' "$ALIYUN_REGISTRY" "$ALIYUN_REGISTRY_NAMESPACE" "$IMAGE_REPOSITORY" "$short_sha" | tr '[:upper:]' '[:lower:]')"
+          printf '%s' "$ALIYUN_REGISTRY_PASSWORD" | ssh "$PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST" \
+            "docker login '$ALIYUN_REGISTRY' --username '$ALIYUN_REGISTRY_USERNAME' --password-stdin"
+          ssh "$PRODUCTION_SSH_USER@$PRODUCTION_SSH_HOST" \
+            "/root/narratoai/deploy-service.sh frontend '$image'"

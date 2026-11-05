@@ -1,0 +1,532 @@
+{
+  "voices": [
+    {
+      "uri": "speech:yingshijieshuo-zh-male:d6ikiap719ns73bm6nvg:hsekylphwpzwknvzxiop",
+      "name": "影视解说",
+      "name_i18n": {
+        "zh-CN": "影视解说",
+        "en": "Film Narration"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/yingshijieshuo-zh-male.mp3"
+    },
+    {
+      "uri": "speech:maikeashe-zh-male:d6ikiap719ns73bm6nvg:qllevifvcptznobnygtv",
+      "name": "麦克阿瑟",
+      "name_i18n": {
+        "zh-CN": "麦克阿瑟",
+        "en": "Macintosh"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/maikeashe-zh-male.mp3"
+    },
+    {
+      "uri": "speech:dong-yuhui-zh-male:d6ikiap719ns73bm6nvg:msgeawwibyggahyzwazm",
+      "name": "董宇辉",
+      "name_i18n": {
+        "zh-CN": "董宇辉",
+        "en": "Dong Yuhui"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/dong-yuhui-zh-male.mp3"
+    },
+    {
+      "uri": "speech:fangzhenren-ad-fake-news-zh-male:d6ikiap719ns73bm6nvg:msykbddetwfmqhfthgbl",
+      "name": "仿真人",
+      "name_i18n": {
+        "zh-CN": "仿真人",
+        "en": "Realistic Human"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/fangzhenren-ad-fake-news-zh-male.mp3"
+    },
+    {
+      "uri": "speech:fengyin-jilupian-jieshuo-zh-male:d6ikiap719ns73bm6nvg:ujgcgpcamytvppmrwotl",
+      "name": "风吟纪录片解说",
+      "name_i18n": {
+        "zh-CN": "风吟纪录片解说",
+        "en": "Fengyin Documentary Narration"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/fengyin-jilupian-jieshuo-zh-male.mp3"
+    },
+    {
+      "uri": "speech:guwo-dianying-jieshuo-zh-male:d6ikiap719ns73bm6nvg:wkmddbspuhywxaugurlv",
+      "name": "顾我电影解说",
+      "name_i18n": {
+        "zh-CN": "顾我电影解说",
+        "en": "Guwo Film Narration"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/guwo-dianying-jieshuo-zh-male.mp3"
+    },
+    {
+      "uri": "speech:jia-xiaojun-final-zh-male:d6ikiap719ns73bm6nvg:zmsijkiegtwzhtgobpes",
+      "name": "贾小军",
+      "name_i18n": {
+        "zh-CN": "贾小军",
+        "en": "Jia Xiaojun"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/jia-xiaojun-final-zh-male.mp3"
+    },
+    {
+      "uri": "speech:junshi-zh-male:d6ikiap719ns73bm6nvg:ujfwkaqgtlbjlyuhfefg",
+      "name": "军事解说",
+      "name_i18n": {
+        "zh-CN": "军事解说",
+        "en": "Military Narration"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/junshi-zh-male.mp3"
+    },
+    {
+      "uri": "speech:qi-tongwei-v2-zh-male:d6ikiap719ns73bm6nvg:uadrddfwjekapabrpxda",
+      "name": "祁同伟",
+      "name_i18n": {
+        "zh-CN": "祁同伟",
+        "en": "Qi Tongwei"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/qi-tongwei-v2-zh-male.mp3"
+    },
+    {
+      "uri": "speech:saima-niang-mambo-oye-zh-female:d6ikiap719ns73bm6nvg:yljrtvsnngwqzlynktsi",
+      "name": "赛马娘曼波欧耶版",
+      "name_i18n": {
+        "zh-CN": "赛马娘曼波欧耶版",
+        "en": "Uma Musume Mambo Oye Version"
+      },
+      "type": "basic",
+      "gender": "female",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/saima-niang-mambo-oye-zh-female.mp3"
+    },
+    {
+      "uri": "speech:shejian-shangde-zhongguo-zh-male:d6ikiap719ns73bm6nvg:zyzhnvvefltqpyydglnw",
+      "name": "舌尖上的中国",
+      "name_i18n": {
+        "zh-CN": "舌尖上的中国",
+        "en": "A Bite of China"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/shejian-shangde-zhongguo-zh-male.mp3"
+    },
+    {
+      "uri": "speech:xiaoming-jianmo-zh-male:d6ikiap719ns73bm6nvg:rakvpkoemevswgrosexy",
+      "name": "小明剑魔",
+      "name_i18n": {
+        "zh-CN": "小明剑魔",
+        "en": "Xiaoming Sword Demon"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/xiaoming-jianmo-zh-male.mp3"
+    },
+    {
+      "uri": "speech:xin-youxi-jieshuo-zh-male:d6ikiap719ns73bm6nvg:oyyrcgsofqaobicmjigt",
+      "name": "新游戏解说",
+      "name_i18n": {
+        "zh-CN": "新游戏解说",
+        "en": "New Game Narration"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/xin-youxi-jieshuo-zh-male.mp3"
+    },
+    {
+      "uri": "speech:xinzhong-zhicheng-zh-male:d6ikiap719ns73bm6nvg:aozmkecymyafnqbcrerj",
+      "name": "心中之城",
+      "name_i18n": {
+        "zh-CN": "心中之城",
+        "en": "City in the Heart"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/xinzhong-zhicheng-zh-male.mp3"
+    },
+    {
+      "uri": "39ea63baf6c0480cb8148dc7955db78e",
+      "name": "影视解说",
+      "name_i18n": {
+        "zh-CN": "影视解说",
+        "en": "Film Narration"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/yingshijieshuo-zh-male.mp3"
+    },
+    {
+      "uri": "405736979e244634914add64e37290b0",
+      "name": "麦克阿瑟",
+      "name_i18n": {
+        "zh-CN": "麦克阿瑟",
+        "en": "Macintosh"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/maikeashe-zh-male.mp3"
+    },
+    {
+      "uri": "c7cbda1c101c4ce8906c046f01eca1a2",
+      "name": "董宇辉",
+      "name_i18n": {
+        "zh-CN": "董宇辉",
+        "en": "Dong Yuhui"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/dong-yuhui-zh-male.mp3"
+    },
+    {
+      "uri": "21082ac382d945e29aea354e90380f11",
+      "name": "仿真人",
+      "name_i18n": {
+        "zh-CN": "仿真人",
+        "en": "Realistic Human"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/fangzhenren-ad-fake-news-zh-male.mp3"
+    },
+    {
+      "uri": "0d759b9d0ed54e9d8c04cfe9ad921b45",
+      "name": "风吟纪录片解说",
+      "name_i18n": {
+        "zh-CN": "风吟纪录片解说",
+        "en": "Fengyin Documentary Narration"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/fengyin-jilupian-jieshuo-zh-male.mp3"
+    },
+    {
+      "uri": "c44c45fce45443aaa40b7721c01c7c86",
+      "name": "顾我电影解说",
+      "name_i18n": {
+        "zh-CN": "顾我电影解说",
+        "en": "Guwo Film Narration"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/guwo-dianying-jieshuo-zh-male.mp3"
+    },
+    {
+      "uri": "c4c6d782c03645399d94008335520a18",
+      "name": "贾小军终极版",
+      "name_i18n": {
+        "zh-CN": "贾小军终极版",
+        "en": "Jia Xiaojun Ultimate"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/jia-xiaojun-final-zh-male.mp3"
+    },
+    {
+      "uri": "2cb86560d1a541fa842a8571a5ffa70b",
+      "name": "军事解说",
+      "name_i18n": {
+        "zh-CN": "军事解说",
+        "en": "Military Narration"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/junshi-zh-male.mp3"
+    },
+    {
+      "uri": "ec48458814e3409196c795a3a6b32201",
+      "name": "祁同伟",
+      "name_i18n": {
+        "zh-CN": "祁同伟",
+        "en": "Qi Tongwei"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/qi-tongwei-v2-zh-male.mp3"
+    },
+    {
+      "uri": "561fcedfdf0e4e1399d1bc4930d50c0e",
+      "name": "赛马娘曼波欧耶版",
+      "name_i18n": {
+        "zh-CN": "赛马娘曼波欧耶版",
+        "en": "Uma Musume Mambo Oye Version"
+      },
+      "type": "advanced",
+      "gender": "female",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/saima-niang-mambo-oye-zh-female.mp3"
+    },
+    {
+      "uri": "974cff79957e4b96b13256d90df4ff11",
+      "name": "舌尖上的中国",
+      "name_i18n": {
+        "zh-CN": "舌尖上的中国",
+        "en": "A Bite of China"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/shejian-shangde-zhongguo-zh-male.mp3"
+    },
+    {
+      "uri": "a9372068ed0740b48326cf9a74d7496a",
+      "name": "小明剑魔",
+      "name_i18n": {
+        "zh-CN": "小明剑魔",
+        "en": "Xiaoming Sword Demon"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/xiaoming-jianmo-zh-male.mp3"
+    },
+    {
+      "uri": "959b9a533d984b9a92af0c101a92118f",
+      "name": "新游戏解说",
+      "name_i18n": {
+        "zh-CN": "新游戏解说",
+        "en": "New Game Narration"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/xin-youxi-jieshuo-zh-male.mp3"
+    },
+    {
+      "uri": "e76f1bc68df94505ae195c8d5316448c",
+      "name": "心中之城",
+      "name_i18n": {
+        "zh-CN": "心中之城",
+        "en": "City in the Heart"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "zh",
+      "sample_url": "https://store.narratoai.cn/tts/xinzhong-zhicheng-zh-male.mp3"
+    },
+    {
+      "uri": "speech:alex-chikna-en-male:d6ikiap719ns73bm6nvg:fvmydwjzlxssjyzdrudg",
+      "name": "Alex Chikna",
+      "name_i18n": {
+        "zh-CN": "亚历克斯",
+        "en": "Alex Chikna"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/alex-chikna-en-male.mp3"
+    },
+    {
+      "uri": "speech:alle-en-unknown:d6ikiap719ns73bm6nvg:cvczkjimyznaqpmqjyih",
+      "name": "ALLE",
+      "name_i18n": {
+        "zh-CN": "艾莉",
+        "en": "ALLE"
+      },
+      "type": "basic",
+      "gender": "female",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/alle-en-unknown.mp3"
+    },
+    {
+      "uri": "speech:calm-normal-en-unknown:d6ikiap719ns73bm6nvg:sradnkrdblqzhagvmakw",
+      "name": "Calm Normal",
+      "name_i18n": {
+        "zh-CN": "沉稳男声",
+        "en": "Calm Normal"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/calm-normal-en-unknown.mp3"
+    },
+    {
+      "uri": "speech:donald-j-trump-noise-reduction-en-male:d6ikiap719ns73bm6nvg:jlemykgyrcijjbjcknzz",
+      "name": "Donald J. Trump",
+      "name_i18n": {
+        "zh-CN": "唐纳德·特朗普",
+        "en": "Donald J. Trump"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/donald-j-trump-noise-reduction-en-male.mp3"
+    },
+    {
+      "uri": "speech:elite-en-unknown:d6ikiap719ns73bm6nvg:krcspnnguigguqbhgqvq",
+      "name": "ELITE",
+      "name_i18n": {
+        "zh-CN": "精英男声",
+        "en": "ELITE"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/elite-en-unknown.mp3"
+    },
+    {
+      "uri": "speech:horror-en-unknown:d6ikiap719ns73bm6nvg:oixlthtftfuinpfljzko",
+      "name": "Horror",
+      "name_i18n": {
+        "zh-CN": "惊悚男声",
+        "en": "Horror"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/horror-en-unknown.mp3"
+    },
+    {
+      "uri": "speech:meiqu-kelong-en-unknown:d6ikiap719ns73bm6nvg:yjjzfcanyiqhsnfxruuh",
+      "name": "美区克隆",
+      "name_i18n": {
+        "zh-CN": "美式男声",
+        "en": "US Clone"
+      },
+      "type": "basic",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/meiqu-kelong-en-unknown.mp3"
+    },
+    {
+      "uri": "speech:sarah-en-female:d6ikiap719ns73bm6nvg:gupqidvhygjsokywmcqx",
+      "name": "Sarah",
+      "name_i18n": {
+        "zh-CN": "莎拉",
+        "en": "Sarah"
+      },
+      "type": "basic",
+      "gender": "female",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/sarah-en-female.mp3"
+    },
+    {
+      "uri": "52e0660e03fe4f9a8d2336f67cab5440",
+      "name": "Alex Chikna",
+      "name_i18n": {
+        "zh-CN": "亚历克斯",
+        "en": "Alex Chikna"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/alex-chikna-en-male.mp3"
+    },
+    {
+      "uri": "59e9dc1cb20c452584788a2690c80970",
+      "name": "ALLE",
+      "name_i18n": {
+        "zh-CN": "艾莉",
+        "en": "ALLE"
+      },
+      "type": "advanced",
+      "gender": "female",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/alle-en-unknown.mp3"
+    },
+    {
+      "uri": "0b74ead073f2474a904f69033535b98e",
+      "name": "Calm Normal",
+      "name_i18n": {
+        "zh-CN": "沉稳男声",
+        "en": "Calm Normal"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/calm-normal-en-unknown.mp3"
+    },
+    {
+      "uri": "5196af35f6ff4a0dbf541793fc9f2157",
+      "name": "Donald J. Trump",
+      "name_i18n": {
+        "zh-CN": "唐纳德·特朗普",
+        "en": "Donald J. Trump"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/donald-j-trump-noise-reduction-en-male.mp3"
+    },
+    {
+      "uri": "d8a1340984ee4b63ad1ffae27a6a4339",
+      "name": "ELITE",
+      "name_i18n": {
+        "zh-CN": "精英男声",
+        "en": "ELITE"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/elite-en-unknown.mp3"
+    },
+    {
+      "uri": "ef9c79b62ef34530bf452c0e50e3c260",
+      "name": "Horror",
+      "name_i18n": {
+        "zh-CN": "惊悚男声",
+        "en": "Horror"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/horror-en-unknown.mp3"
+    },
+    {
+      "uri": "692a2e659a8748558a1abc97ec051e0e",
+      "name": "美区克隆",
+      "name_i18n": {
+        "zh-CN": "美式男声",
+        "en": "US Clone"
+      },
+      "type": "advanced",
+      "gender": "male",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/meiqu-kelong-en-unknown.mp3"
+    },
+    {
+      "uri": "933563129e564b19a115bedd57b7406a",
+      "name": "Sarah",
+      "name_i18n": {
+        "zh-CN": "莎拉",
+        "en": "Sarah"
+      },
+      "type": "advanced",
+      "gender": "female",
+      "language": "en",
+      "sample_url": "https://store.narratoai.cn/tts/sarah-en-female.mp3"
+    }
+  ]
+}

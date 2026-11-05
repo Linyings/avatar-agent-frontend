@@ -1,0 +1,38 @@
+{
+  "output": "CHANGELOG.md",
+  "noAuthors": true,
+  "templates": {
+    "commitMessage": "chore(release): 发布 v{{newVersion}}",
+    "tagMessage": "v{{newVersion}}",
+    "tagBody": "v{{newVersion}}"
+  },
+  "types": {
+    "feat": {
+      "title": "✨ 新增功能",
+      "semver": "minor"
+    },
+    "fix": {
+      "title": "🐛 问题修复",
+      "semver": "patch"
+    },
+    "perf": {
+      "title": "⚡️ 性能优化",
+      "semver": "patch"
+    },
+    "refactor": {
+      "title": "♻️ 代码重构"
+    },
+    "style": {
+      "title": "💄 样式更新"
+    },
+    "docs": {
+      "title": "📝 文档更新"
+    },
+    "test": false,
+    "build": false,
+    "ci": false,
+    "chore": false,
+    "types": false,
+    "examples": false
+  }
+}

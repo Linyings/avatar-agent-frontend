@@ -1,0 +1,63 @@
+# 依赖目录
+node_modules
+npm-debug.log
+yarn-error.log
+yarn.lock
+
+# 构建输出
+dist
+build
+.vite
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 版本控制
+.git
+.gitignore
+.gitattributes
+
+# IDE 配置
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 测试相关
+coverage
+.nyc_output
+*.log
+
+# 文档
+*.md
+!README.md
+docs
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# 其他
+.editorconfig
+.eslintrc*
+.prettierrc*
+vitest.config.ts
+
+# Docker 相关
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# EdgeOne 配置
+edgeone.json
+wrangler.toml
+
+# 临时文件
+tmp
+temp
+*.tmp
+

@@ -1,0 +1,10 @@
+name = "video-web2"
+compatibility_date = "2023-06-07"
+
+[env.production]
+account_id = ""
+compatibility_date = "2023-06-07"
+
+[[env.production.route]]
+pattern = "*"
+zone_name = ""

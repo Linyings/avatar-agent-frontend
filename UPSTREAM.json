@@ -1,0 +1,7 @@
+{
+  "project": "avatar-agent-frontend",
+  "upstream": "https://github.com/linyqh/NarratoAI-SaaS-F.git",
+  "commit": "98dddedc69914ddec02ef96a568dddc8228eee17",
+  "reference_directory": "参考/NarratoAI-SaaS-F",
+  "license_note": "Upstream sources and notices retained. No new blanket license is granted by this project."
+}

@@ -1,0 +1,917 @@
+[
+  {
+    "slug": "ai-video-commentary-generator",
+    "category": "Core workflows",
+    "primaryKeyword": "ai video commentary generator",
+    "secondaryKeywords": ["video commentary ai", "ai commentary video maker", "youtube commentary generator"],
+    "searchIntent": "Creators want to turn source footage into a narrated commentary video without writing every beat from scratch.",
+    "title": "AI Video Commentary Generator for Creator Workflows | 数字人口播",
+    "metaDescription": "Use 数字人口播 as an AI video commentary generator for scripts, subtitles, voiceover, scene understanding, review, and export-ready commentary videos.",
+    "h1": "AI Video Commentary Generator for Creator Workflows",
+    "kicker": "Commentary production workflow",
+    "hero": "Turn authorized source footage into structured commentary scripts, subtitles, narration, and export-ready videos with a reviewable AI workflow.",
+    "pain": "People searching for an AI video commentary generator usually already have a topic, clip, recording, or reference video. The hard part is not a single AI prompt. It is keeping the story clear while the script, visual context, voiceover, subtitles, and final edit stay aligned.",
+    "workflow": [
+      "Upload your authorized video, transcript, or creator brief so 数字人口播 can understand the source material.",
+      "Analyze the visual story, subtitles, speakers, pacing, and moments that need commentary context.",
+      "Draft a commentary script with hooks, transitions, explanation beats, and ending structure.",
+      "Review subtitles and voiceover direction before generating narration for the approved script.",
+      "Export a polished commentary video or keep the assets ready for manual finishing."
+    ],
+    "who": ["YouTube commentary creators", "Movie and drama recap channels", "Education and explainer teams", "Small content studios"],
+    "features": ["Scene-aware script generation", "Subtitle extraction and cleanup", "AI voiceover preparation", "Human review before export"],
+    "uniqueAngle": "数字人口播 is strongest when commentary needs to reference what is actually happening on screen, not just rewrite a title or outline.",
+    "faq": [
+      ["Can 数字人口播 generate commentary from any video?", "数字人口播 is designed for videos you own or have permission to use. Upload the source and review the generated script before publishing."],
+      ["Does the workflow include subtitles?", "Yes. Subtitles can be extracted, cleaned, and used as context for commentary writing and final video structure."],
+      ["Can I edit the AI commentary script?", "Yes. The generated script is meant to be reviewed and refined before voiceover or export."],
+      ["Is this only for movie recap channels?", "No. It also fits product explainers, educational commentary, creator reactions, and team content workflows."]
+    ],
+    "related": ["ai-movie-recap-generator", "ai-video-narration-generator", "ai-video-script-generator", "ai-subtitle-generator", "content-repurposing-ai"]
+  },
+  {
+    "slug": "ai-video-narration-generator",
+    "category": "Core workflows",
+    "primaryKeyword": "ai video narration generator",
+    "secondaryKeywords": ["ai narration for video", "video narration ai", "ai narrator for videos"],
+    "searchIntent": "Users need narration that fits the video sequence, not a disconnected text-to-speech file.",
+    "title": "AI Video Narration Generator for Reviewed Video Scripts | 数字人口播",
+    "metaDescription": "Create video narration with AI using source analysis, script review, subtitles, voiceover preparation, and export-ready 数字人口播 workflows.",
+    "h1": "AI Video Narration Generator for Reviewed Video Scripts",
+    "kicker": "Narration built from video context",
+    "hero": "Create narration that follows the visual sequence, subtitle context, pacing, and story structure of your video.",
+    "pain": "A standalone text-to-speech tool can read words aloud, but video narration needs timing, scene context, tone, and structure. Creators search for AI video narration when they want a repeatable workflow that starts from footage and ends with reviewable narration.",
+    "workflow": [
+      "Upload the video source or outline that needs narration.",
+      "Let 数字人口播 inspect subtitles, visual segments, and story beats.",
+      "Generate a narration script with a clear opening, middle, and closing transition.",
+      "Choose and review voiceover direction before producing the narration asset.",
+      "Export narration-ready video assets for YouTube, short-form channels, or internal review."
+    ],
+    "who": ["Explainer video creators", "Course teams", "Narrated recap channels", "Agencies producing repeatable videos"],
+    "features": ["Visual context for narration", "Script-to-voice workflow", "Subtitle-aware pacing", "Export-ready review loop"],
+    "uniqueAngle": "The narration is created inside the same workflow as script, subtitle, and video structure, so teams avoid stitching disconnected tools together.",
+    "faq": [
+      ["Can I use my own script?", "Yes. You can start from a script or let 数字人口播 draft one from video context."],
+      ["Does narration have to be generated immediately?", "No. Review the script first, then generate voiceover when the structure is approved."],
+      ["What content works best?", "Explainers, commentary videos, course previews, recap videos, and creator updates work especially well."],
+      ["Can teams use this for batches?", "Yes. The workflow is designed for repeatable production rather than one-off narration files."]
+    ],
+    "related": ["ai-video-commentary-generator", "ai-voiceover-generator", "ai-video-script-generator", "youtube-video-recap-generator", "faceless-video-generator"]
+  },
+  {
+    "slug": "ai-movie-recap-generator",
+    "category": "Creator scenarios",
+    "primaryKeyword": "ai movie recap generator",
+    "secondaryKeywords": ["movie recap ai", "ai recap video generator", "movie commentary generator"],
+    "searchIntent": "Recap creators want a faster way to structure authorized movie or episode material into a narrated recap.",
+    "title": "AI Movie Recap Generator for Commentary Videos | 数字人口播",
+    "metaDescription": "Build movie recap workflows with AI scene analysis, recap scripts, subtitles, voiceover, human review, and export-ready video structure in 数字人口播.",
+    "h1": "AI Movie Recap Generator for Commentary Videos",
+    "kicker": "Recap scripts with scene context",
+    "hero": "Transform authorized film, drama, or episode material into a structured recap script with subtitles, narration, and review checkpoints.",
+    "pain": "Movie recap production is time-consuming because creators must watch the source, identify plot turns, write connective narration, keep character context clear, and prepare subtitles or voiceover. A useful AI movie recap generator must support review and rights-aware workflows.",
+    "workflow": [
+      "Upload authorized recap footage, subtitle files, or a detailed episode outline.",
+      "Analyze scenes, dialogue context, character moments, and turning points.",
+      "Generate a recap script with setup, conflict, escalation, twist, and closing summary.",
+      "Review wording, remove sensitive or inaccurate claims, and adjust narration style.",
+      "Export recap-ready assets with voiceover and subtitles for final editing."
+    ],
+    "who": ["Movie recap channels", "Drama explainers", "Entertainment editors", "Localization teams"],
+    "features": ["Plot-aware script structure", "Subtitle and visual alignment", "Narration style control", "Review before voiceover"],
+    "uniqueAngle": "数字人口播 helps organize the recap around story beats while keeping a human review step before publication.",
+    "faq": [
+      ["Can I upload copyrighted movies?", "Use only content you own, have licensed, or are otherwise authorized to process. 数字人口播 does not grant rights to source material."],
+      ["Can the recap script follow a suspense style?", "Yes. The script can be shaped around suspense, explanation, emotional recap, or concise summary styles."],
+      ["Does 数字人口播 understand subtitles?", "Yes. Subtitles can be used as source context for plot and dialogue understanding."],
+      ["Can I revise character names and plot details?", "Yes. Review and edit the generated recap before creating voiceover or export assets."]
+    ],
+    "related": ["movie-recap-maker", "ai-video-commentary-generator", "ai-video-narration-generator", "youtube-video-recap-generator", "ai-subtitle-generator"]
+  },
+  {
+    "slug": "ai-video-script-generator",
+    "category": "Core workflows",
+    "primaryKeyword": "ai video script generator",
+    "secondaryKeywords": ["video script ai", "ai script writer for videos", "youtube script generator"],
+    "searchIntent": "Users want a script that is tied to source footage, not generic blog-style copy.",
+    "title": "AI Video Script Generator for Source-Based Videos | 数字人口播",
+    "metaDescription": "Generate video scripts from source footage, subtitles, visual context, and creator briefs with 数字人口播's reviewable AI video workflow.",
+    "h1": "AI Video Script Generator for Source-Based Videos",
+    "kicker": "Script from footage, not a blank page",
+    "hero": "Create scripts that follow your video source, subtitle context, audience intent, and desired narration style.",
+    "pain": "Generic script tools can produce fluent copy, but video teams need scripts that match what appears on screen. Searching for an AI video script generator usually means the user needs a draft that can become subtitles, narration, and final video structure.",
+    "workflow": [
+      "Start with a source video, transcript, outline, or content brief.",
+      "Identify the audience, platform, and script style for the asset.",
+      "Generate a script with hook, context, scene beats, transitions, and CTA.",
+      "Review the draft against visual and subtitle evidence.",
+      "Continue into voiceover, captions, and video export when the script is approved."
+    ],
+    "who": ["YouTube creators", "Course publishers", "Marketing teams", "Video editors"],
+    "features": ["Hook and outline generation", "Scene-linked script beats", "Subtitle context", "Review-ready drafts"],
+    "uniqueAngle": "数字人口播 treats the script as one stage in a production workflow, so it can continue into voiceover and video assets.",
+    "faq": [
+      ["Can I generate a script from a transcript?", "Yes. Transcripts and subtitles are strong inputs for source-based script generation."],
+      ["Can the script be short-form?", "Yes. The same workflow can produce concise scripts for Shorts, Reels, TikTok, or longer narration."],
+      ["Can I keep my own writing style?", "Use the brief and review stage to steer tone, pacing, and vocabulary."],
+      ["Does the tool export finished videos?", "数字人口播 supports script, subtitles, voiceover, composition, and export workflows for eligible projects."]
+    ],
+    "related": ["ai-video-commentary-generator", "ai-video-narration-generator", "ai-caption-generator", "long-video-to-short-video-ai", "content-repurposing-ai"]
+  },
+  {
+    "slug": "ai-subtitle-generator",
+    "category": "Core workflows",
+    "primaryKeyword": "ai subtitle generator",
+    "secondaryKeywords": ["ai video subtitle generator", "generate subtitles from video ai", "automatic subtitles ai"],
+    "searchIntent": "Users need subtitles that support editing, review, and downstream script work.",
+    "title": "AI Subtitle Generator for Video Workflows | 数字人口播",
+    "metaDescription": "Generate and review AI subtitles for video commentary, recaps, short clips, and narration workflows with 数字人口播.",
+    "h1": "AI Subtitle Generator for Video Workflows",
+    "kicker": "Subtitles as production context",
+    "hero": "Generate subtitles that can be reviewed, used for script context, and carried into voiceover or short-video production.",
+    "pain": "Subtitles are not just text under a video. They help AI understand dialogue, pacing, speakers, and story context. Creators searching for an AI subtitle generator often need subtitles that can feed the rest of the editing workflow.",
+    "workflow": [
+      "Upload a video with speech or import an existing subtitle file.",
+      "Transcribe and segment speech into reviewable subtitle lines.",
+      "Clean timing, line breaks, and text clarity before using subtitles downstream.",
+      "Use subtitle context to generate scripts, captions, narration, or recap structure.",
+      "Export subtitles and video assets for publication or final editing."
+    ],
+    "who": ["Creators publishing silent-view videos", "Editors preparing recap material", "Course teams", "Localization reviewers"],
+    "features": ["Speech-to-subtitle workflow", "Reviewable subtitle payloads", "Script context reuse", "Export-ready subtitle assets"],
+    "uniqueAngle": "数字人口播 uses subtitles as a production layer, not an isolated file conversion step.",
+    "faq": [
+      ["Can subtitles be edited before export?", "Yes. Subtitles should be reviewed and cleaned before final use."],
+      ["Can subtitles help generate scripts?", "Yes. Subtitle text gives 数字人口播 strong context for commentary, recap, and narration scripts."],
+      ["Does this replace manual review?", "No. AI subtitles should be checked for names, terms, timing, and context."],
+      ["What videos work best?", "Clear speech, interviews, courses, commentary footage, and recordings with understandable audio work best."]
+    ],
+    "related": ["ai-caption-generator", "ai-video-script-generator", "ai-video-commentary-generator", "podcast-clip-maker", "ai-youtube-shorts-generator"]
+  },
+  {
+    "slug": "ai-caption-generator",
+    "category": "Core workflows",
+    "primaryKeyword": "ai caption generator",
+    "secondaryKeywords": ["ai video caption generator", "captions for shorts ai", "social video captions"],
+    "searchIntent": "Users want readable captions and hook text for short-form video distribution.",
+    "title": "AI Caption Generator for Shorts, Reels, and Recaps | 数字人口播",
+    "metaDescription": "Create captions for short videos, recaps, commentary clips, and social assets using 数字人口播's subtitle-aware AI workflow.",
+    "h1": "AI Caption Generator for Shorts, Reels, and Recaps",
+    "kicker": "Captions for social video clarity",
+    "hero": "Turn speech, script, and visual context into captions that help short videos make sense quickly.",
+    "pain": "Captions for short-form videos need more than transcription. They need strong line breaks, readable phrasing, hooks, and alignment with the clip's message. An AI caption generator is most useful when it knows the script and video workflow.",
+    "workflow": [
+      "Upload source video or use an approved 数字人口播 script.",
+      "Generate subtitle and caption text from the speech and scene context.",
+      "Refine hook captions, line breaks, and emphasis for the target platform.",
+      "Review captions alongside voiceover and visual pacing.",
+      "Export assets for Shorts, Reels, TikTok, recaps, or commentary videos."
+    ],
+    "who": ["Short-form creators", "Social media teams", "Recap editors", "Course marketing teams"],
+    "features": ["Caption drafting from subtitles", "Hook-oriented social copy", "Review before export", "Short-form workflow fit"],
+    "uniqueAngle": "数字人口播 connects captions to the script and video structure, so captions reinforce the story rather than float on top of it.",
+    "faq": [
+      ["Are captions the same as subtitles?", "They overlap, but captions for short-form content often include hook phrasing and readability choices beyond raw transcription."],
+      ["Can I use captions for TikTok and Reels?", "Yes. The workflow supports social-video caption planning for short-form exports."],
+      ["Can captions be reviewed?", "Yes. Review captions for accuracy, names, timing, and platform tone."],
+      ["Can captions be generated from a script?", "Yes. Approved scripts and subtitle context can both support caption generation."]
+    ],
+    "related": ["ai-subtitle-generator", "ai-short-video-generator", "instagram-reels-maker-ai", "tiktok-video-editor-ai", "ai-youtube-shorts-generator"]
+  },
+  {
+    "slug": "ai-voiceover-generator",
+    "category": "Core workflows",
+    "primaryKeyword": "ai voiceover generator",
+    "secondaryKeywords": ["ai voice over video", "video voiceover ai", "ai narrator voiceover"],
+    "searchIntent": "Users need voiceover connected to an approved video script and production flow.",
+    "title": "AI Voiceover Generator for Video Narration | 数字人口播",
+    "metaDescription": "Generate AI voiceover for reviewed video scripts, commentary, recaps, and short-form assets with 数字人口播's video production workflow.",
+    "h1": "AI Voiceover Generator for Video Narration",
+    "kicker": "Voiceover after script approval",
+    "hero": "Create voiceover from reviewed scripts so narration, subtitles, and video structure stay aligned.",
+    "pain": "Voiceover quality depends on the script, context, pacing, and review process. People searching for an AI voiceover generator often need more than a voice file. They need a way to move from source video to script, then from script to narration.",
+    "workflow": [
+      "Upload source material or start with a finished video script.",
+      "Review the script for names, pacing, tone, and platform fit.",
+      "Select voiceover direction and generate narration for the approved text.",
+      "Check subtitle and visual timing against the voiceover.",
+      "Export voiceover-ready or finished video assets."
+    ],
+    "who": ["Faceless video creators", "Recap channels", "Course and explainer teams", "Agencies making repeatable formats"],
+    "features": ["Script-first voiceover", "Subtitle alignment", "Narration review stage", "Video export workflow"],
+    "uniqueAngle": "数字人口播 keeps voiceover downstream of the reviewed script, which reduces wasted generation and awkward narration mismatches.",
+    "faq": [
+      ["Can I generate voiceover from my own text?", "Yes. You can provide text or use a script generated inside 数字人口播."],
+      ["Should I review the script first?", "Yes. Review reduces mistakes in names, claims, and scene context before narration is generated."],
+      ["Is this useful for faceless videos?", "Yes. Voiceover is a core part of faceless commentary, recap, and explainer workflows."],
+      ["Can voiceover be used with subtitles?", "Yes. Subtitles and voiceover can be managed together as part of the video workflow."]
+    ],
+    "related": ["ai-video-narration-generator", "faceless-video-generator", "ai-video-script-generator", "ai-movie-recap-generator", "content-repurposing-ai"]
+  },
+  {
+    "slug": "long-video-to-short-video-ai",
+    "category": "Core workflows",
+    "primaryKeyword": "long video to short video ai",
+    "secondaryKeywords": ["long video to short video converter", "repurpose long videos with ai", "ai short clip generator"],
+    "searchIntent": "Teams want to extract short assets from long videos without rebuilding everything manually.",
+    "title": "Long Video to Short Video AI Workflow | 数字人口播",
+    "metaDescription": "Repurpose long videos into short-form scripts, captions, subtitles, narration, and export-ready clips with 数字人口播.",
+    "h1": "Long Video to Short Video AI Workflow",
+    "kicker": "Repurpose long source videos",
+    "hero": "Turn a long recording into short-form assets with AI analysis, script review, captions, narration, and export planning.",
+    "pain": "Long videos contain many useful moments, but finding them manually is slow. A long video to short video AI workflow should help identify context, generate structure, and prepare assets for short-form channels without losing the original message.",
+    "workflow": [
+      "Upload a webinar, podcast, course, interview, stream, or creator recording.",
+      "Analyze subtitles, scene shifts, topics, speakers, and strong moments.",
+      "Create short-video scripts or clip structures with clear hooks.",
+      "Review captions, narration, and context so each short can stand alone.",
+      "Export short-form assets for YouTube Shorts, TikTok, Reels, or manual finishing."
+    ],
+    "who": ["Content repurposing teams", "Podcast publishers", "Course marketers", "Creator operations teams"],
+    "features": ["Long source analysis", "Short-form script planning", "Caption and subtitle support", "Reusable export workflow"],
+    "uniqueAngle": "数字人口播 is built for a source-to-assets workflow where one long upload can feed multiple scripts and deliverables.",
+    "faq": [
+      ["What long videos work well?", "Podcasts, interviews, webinars, courses, livestreams, and creator recordings are strong inputs."],
+      ["Does 数字人口播 automatically publish shorts?", "No. It prepares reviewed assets for export or final publishing workflows."],
+      ["Can one source produce multiple short ideas?", "Yes. The workflow is designed to identify and structure multiple short-form outputs."],
+      ["Can captions and voiceover be included?", "Yes. Captions, subtitles, and narration can be part of the short-video workflow."]
+    ],
+    "related": ["ai-short-video-generator", "ai-youtube-shorts-generator", "podcast-clip-maker", "content-repurposing-ai", "tiktok-video-editor-ai"]
+  },
+  {
+    "slug": "ai-short-video-generator",
+    "category": "Platform workflows",
+    "primaryKeyword": "ai short video generator",
+    "secondaryKeywords": ["short video ai generator", "ai shorts maker", "short form video ai"],
+    "searchIntent": "Users want a repeatable way to create short-form videos from ideas or existing source material.",
+    "title": "AI Short Video Generator for Source-Based Clips | 数字人口播",
+    "metaDescription": "Create short-form video assets from source footage, scripts, subtitles, captions, and AI narration using 数字人口播.",
+    "h1": "AI Short Video Generator for Source-Based Clips",
+    "kicker": "Short-form assets from source context",
+    "hero": "Build short videos from authorized footage, scripts, captions, and narration with a workflow designed for review.",
+    "pain": "Short videos need fast context. A generic generator may create a clip, but creators still need a hook, concise script, captions, voiceover, and an export format that fits the channel. 数字人口播 keeps those parts connected.",
+    "workflow": [
+      "Start from a brief, source video, subtitle file, or existing long-form asset.",
+      "Generate a short-video angle with hook, context, and ending.",
+      "Prepare captions and narration that match the short structure.",
+      "Review the asset before export to avoid unclear or inaccurate clips.",
+      "Export for social channels or hand off to a manual editor."
+    ],
+    "who": ["Solo creators", "Social teams", "Agencies", "Educators creating previews"],
+    "features": ["Short script generation", "Caption planning", "Voiceover workflow", "Human approval loop"],
+    "uniqueAngle": "数字人口播 focuses on short videos built from real source context rather than disconnected visual effects.",
+    "faq": [
+      ["Can I start from only an idea?", "Yes, but source footage or a transcript gives better context for accurate videos."],
+      ["Does it support Shorts, Reels, and TikTok formats?", "数字人口播 can prepare short-form assets for those platforms, with final publishing handled by your channel workflow."],
+      ["Can I review before export?", "Yes. Review is part of the workflow."],
+      ["Is this for ads or organic content?", "It can support both, as long as the source and claims are reviewed before publishing."]
+    ],
+    "related": ["long-video-to-short-video-ai", "ai-caption-generator", "ai-youtube-shorts-generator", "instagram-reels-maker-ai", "tiktok-video-editor-ai"]
+  },
+  {
+    "slug": "ai-youtube-shorts-generator",
+    "category": "Platform workflows",
+    "primaryKeyword": "ai youtube shorts generator",
+    "secondaryKeywords": ["youtube shorts ai", "youtube shorts maker from long video", "ai shorts generator for youtube"],
+    "searchIntent": "YouTube creators want to convert long videos or ideas into Shorts-ready assets.",
+    "title": "AI YouTube Shorts Generator for Creator Workflows | 数字人口播",
+    "metaDescription": "Use 数字人口播 to create YouTube Shorts-ready scripts, captions, subtitles, narration, and short-form assets from source videos.",
+    "h1": "AI YouTube Shorts Generator for Creator Workflows",
+    "kicker": "Shorts-ready structure",
+    "hero": "Repurpose long-form source material into YouTube Shorts assets with hooks, captions, narration, and reviewable scripts.",
+    "pain": "YouTube Shorts often need a clear hook in the first seconds, enough context to stand alone, and captions that work without sound. An AI YouTube Shorts generator should support structure and review, not just crop a timeline.",
+    "workflow": [
+      "Upload a long YouTube video, recording, transcript, or creator brief.",
+      "Identify short-form angles, topic shifts, and moments with standalone value.",
+      "Draft Shorts scripts with hook, context, payoff, and CTA.",
+      "Review captions, subtitles, and voiceover before export.",
+      "Export Shorts-ready assets for your YouTube workflow."
+    ],
+    "who": ["YouTube creators", "Podcast channels", "Course creators", "Content managers"],
+    "features": ["Hook-focused scripts", "Caption readability", "Narration support", "Long-to-short workflow"],
+    "uniqueAngle": "数字人口播 helps preserve the meaning of the original video while turning it into concise Shorts assets.",
+    "faq": [
+      ["Can I use a long YouTube video as input?", "Yes, if you own it or have permission to process it."],
+      ["Does 数字人口播 upload to YouTube automatically?", "No. It prepares assets for your publishing workflow."],
+      ["Can I generate multiple Shorts ideas?", "Yes. Long source material can be analyzed for multiple short-form angles."],
+      ["Are captions included?", "Captions and subtitles can be part of the workflow."]
+    ],
+    "related": ["long-video-to-short-video-ai", "youtube-video-recap-generator", "ai-short-video-generator", "ai-caption-generator", "podcast-clip-maker"]
+  },
+  {
+    "slug": "youtube-video-recap-generator",
+    "category": "Creator scenarios",
+    "primaryKeyword": "youtube video recap generator",
+    "secondaryKeywords": ["youtube recap ai", "youtube video summary generator", "video recap maker"],
+    "searchIntent": "Users want to summarize or repackage a YouTube-style source into a narrated recap.",
+    "title": "YouTube Video Recap Generator for Narrated Summaries | 数字人口播",
+    "metaDescription": "Create YouTube video recaps with AI scripts, subtitles, narration, scene context, and reviewable export workflows in 数字人口播.",
+    "h1": "YouTube Video Recap Generator for Narrated Summaries",
+    "kicker": "Turn source videos into recap assets",
+    "hero": "Create concise recap scripts and narrated summary assets from authorized YouTube-style source videos.",
+    "pain": "A recap needs to preserve the useful parts of a video while removing repetition. Users searching for a YouTube video recap generator often need a reliable path from transcript and visuals to a shorter narrated version.",
+    "workflow": [
+      "Upload your own video, transcript, or authorized source recording.",
+      "Analyze subtitles, sections, speaker changes, and key moments.",
+      "Generate a recap script with the main idea, supporting context, and concise ending.",
+      "Review accuracy and remove unsupported claims.",
+      "Create voiceover, captions, and export-ready recap assets."
+    ],
+    "who": ["YouTube creators", "Education teams", "Internal training teams", "Content repurposing editors"],
+    "features": ["Video summary scripting", "Subtitle-based context", "Narration generation path", "Reviewable export"],
+    "uniqueAngle": "数字人口播 keeps recap production tied to the source evidence, which is important for summaries and educational reuse.",
+    "faq": [
+      ["Can I recap someone else's YouTube video?", "Only process videos you own, have licensed, or are authorized to use."],
+      ["Can recaps be short-form?", "Yes. Recaps can be structured for Shorts, Reels, TikTok, or longer narrated summaries."],
+      ["Can I edit the summary?", "Yes. Review and edit the recap script before narration or export."],
+      ["Does 数字人口播 keep the original context?", "Subtitle and visual analysis help keep the recap grounded in the source."]
+    ],
+    "related": ["ai-youtube-shorts-generator", "ai-video-commentary-generator", "ai-video-script-generator", "long-video-to-short-video-ai", "content-repurposing-ai"]
+  },
+  {
+    "slug": "movie-recap-maker",
+    "category": "Creator scenarios",
+    "primaryKeyword": "movie recap maker",
+    "secondaryKeywords": ["movie recap video maker", "recap maker ai", "film recap generator"],
+    "searchIntent": "Creators want a production workflow for recap videos, including script, narration, and subtitles.",
+    "title": "Movie Recap Maker for Scripted Commentary Videos | 数字人口播",
+    "metaDescription": "Use 数字人口播 as a movie recap maker for authorized footage, recap scripts, subtitles, AI narration, and review-ready video assets.",
+    "h1": "Movie Recap Maker for Scripted Commentary Videos",
+    "kicker": "Recap production from story beats",
+    "hero": "Build recap videos around plot beats, visual context, subtitles, and narration while keeping human review in the loop.",
+    "pain": "Movie recap makers need consistency. Every episode or film recap needs setup, character clarity, conflict, resolution, and narration timing. The bottleneck is usually the workflow, not just the text generation.",
+    "workflow": [
+      "Provide authorized footage, subtitles, or a structured recap brief.",
+      "Map story beats and moments that need context.",
+      "Generate a recap script that is concise, coherent, and ready for review.",
+      "Create narration and subtitles after the script is approved.",
+      "Export assets for final editing and publishing."
+    ],
+    "who": ["Film recap creators", "Drama recap channels", "Entertainment editors", "Translation and localization teams"],
+    "features": ["Story beat mapping", "Commentary script generation", "Voiceover and subtitle workflow", "Rights-aware review step"],
+    "uniqueAngle": "数字人口播 is built for repeatable recap production where script, voice, subtitles, and export are connected.",
+    "faq": [
+      ["How is this different from a summary tool?", "A recap maker prepares a publishable video structure, not just a paragraph summary."],
+      ["Can I use subtitles as input?", "Yes. Subtitle files are useful context for story and dialogue understanding."],
+      ["Can the recap be dramatic or concise?", "Yes. Tone and structure can be adjusted during script review."],
+      ["What should I check before publishing?", "Check source rights, plot accuracy, names, claims, and platform policy fit."]
+    ],
+    "related": ["ai-movie-recap-generator", "ai-video-commentary-generator", "ai-voiceover-generator", "ai-subtitle-generator", "youtube-video-recap-generator"]
+  },
+  {
+    "slug": "faceless-video-generator",
+    "category": "Creator scenarios",
+    "primaryKeyword": "faceless video generator",
+    "secondaryKeywords": ["faceless ai video generator", "faceless youtube video maker", "ai faceless video"],
+    "searchIntent": "Users want to create videos without recording their own face or voice on camera.",
+    "title": "Faceless Video Generator for Narration-Led Content | 数字人口播",
+    "metaDescription": "Create faceless videos with AI scripts, narration, subtitles, visual context, and export-ready workflows in 数字人口播.",
+    "h1": "Faceless Video Generator for Narration-Led Content",
+    "kicker": "Narration-first video production",
+    "hero": "Create faceless commentary, recap, explainer, or educational videos with scripts, voiceover, subtitles, and reviewable production steps.",
+    "pain": "Faceless video creators need reliable structure because the narration carries the content. A faceless video generator should help plan the script, prepare voiceover, support captions, and keep the source material organized.",
+    "workflow": [
+      "Start from a topic, source video, article outline, or authorized footage.",
+      "Generate a narration-led script with clear scenes and transitions.",
+      "Prepare AI voiceover and captions that make the story understandable.",
+      "Review the script and assets before export.",
+      "Publish or finalize through your normal editing workflow."
+    ],
+    "who": ["Faceless YouTube creators", "Recap channels", "Education channels", "Niche content operators"],
+    "features": ["Script-led video structure", "AI voiceover", "Subtitle and caption support", "Source-based review"],
+    "uniqueAngle": "数字人口播 works well for faceless formats because it treats narration, captions, and source context as one workflow.",
+    "faq": [
+      ["Do I need to record my own voice?", "No. You can use AI voiceover after reviewing the script."],
+      ["Can faceless videos use source footage?", "Yes, when the source is owned, licensed, or authorized for your use."],
+      ["Can I make educational faceless videos?", "Yes. Course previews, explainers, and topic summaries fit the workflow."],
+      ["Can I keep a consistent format?", "Yes. Reusable briefs and review patterns help keep recurring videos consistent."]
+    ],
+    "related": ["ai-voiceover-generator", "ai-video-narration-generator", "ai-video-script-generator", "ai-movie-recap-generator", "content-repurposing-ai"]
+  },
+  {
+    "slug": "podcast-clip-maker",
+    "category": "Creator scenarios",
+    "primaryKeyword": "podcast clip maker",
+    "secondaryKeywords": ["podcast clip maker ai", "podcast clips from video", "ai podcast clip generator"],
+    "searchIntent": "Podcast teams want to turn long episodes into short clips with context, captions, and hooks.",
+    "title": "Podcast Clip Maker for AI-Assisted Short Clips | 数字人口播",
+    "metaDescription": "Repurpose podcasts into clips with AI transcript analysis, speaker context, captions, short scripts, and export-ready assets in 数字人口播.",
+    "h1": "Podcast Clip Maker for AI-Assisted Short Clips",
+    "kicker": "Episode-to-clips workflow",
+    "hero": "Turn podcast episodes into short-form clip assets with speaker context, hooks, captions, and reviewable scripts.",
+    "pain": "Podcast clips often fail when they remove too much context. A useful podcast clip maker should identify a strong moment, explain enough setup, and create captions or narration that help the clip stand alone.",
+    "workflow": [
+      "Upload a podcast episode, video podcast, transcript, or segment brief.",
+      "Analyze speaker turns, topics, hooks, and moments with standalone value.",
+      "Draft clip scripts or captions that preserve context.",
+      "Review names, claims, and speaker attribution.",
+      "Export short-form assets for YouTube Shorts, TikTok, Reels, or show promotion."
+    ],
+    "who": ["Podcast producers", "Creator teams", "Agencies managing shows", "Education and interview channels"],
+    "features": ["Transcript and speaker context", "Hook extraction", "Caption planning", "Long-to-short repurposing"],
+    "uniqueAngle": "数字人口播 helps clips retain enough context to make sense outside the full episode.",
+    "faq": [
+      ["Can it work with audio-only podcasts?", "A transcript or audio-derived subtitle context can support the workflow, while video assets add visual context."],
+      ["Can I make multiple clips from one episode?", "Yes. Long episodes can produce several short-form angles."],
+      ["Does it identify speakers?", "Speaker context can be used during subtitle and script review, but names should be checked before publishing."],
+      ["Can clips include captions?", "Yes. Captions are a core part of short podcast clip workflows."]
+    ],
+    "related": ["long-video-to-short-video-ai", "ai-youtube-shorts-generator", "ai-caption-generator", "content-repurposing-ai", "ai-video-script-generator"]
+  },
+  {
+    "slug": "tiktok-video-editor-ai",
+    "category": "Platform workflows",
+    "primaryKeyword": "tiktok video editor ai",
+    "secondaryKeywords": ["ai tiktok video editor", "tiktok ai video maker", "ai editor for tiktok videos"],
+    "searchIntent": "Users want TikTok-ready assets with hooks, captions, and fast context.",
+    "title": "TikTok Video Editor AI Workflow for Short-Form Assets | 数字人口播",
+    "metaDescription": "Prepare TikTok-ready short-form video assets with AI scripts, captions, subtitles, narration, and review workflows in 数字人口播.",
+    "h1": "TikTok Video Editor AI Workflow for Short-Form Assets",
+    "kicker": "Short-form editing support",
+    "hero": "Create TikTok-ready scripts, captions, and narration assets from source footage or briefs while keeping a human review step.",
+    "pain": "TikTok content needs immediate clarity. The hook, caption, pacing, and visual setup must work in seconds. A TikTok video editor AI workflow should help shape the asset before final publishing, not promise automatic virality.",
+    "workflow": [
+      "Start with a short brief, source recording, long video, or transcript.",
+      "Generate a hook-led script and caption plan.",
+      "Adapt the message for short-form pacing and silent viewing.",
+      "Review subtitles, narration, and visual context.",
+      "Export assets for your TikTok publishing process."
+    ],
+    "who": ["TikTok creators", "Social media managers", "Product marketers", "Content repurposing teams"],
+    "features": ["Hook-first scripting", "Caption support", "Voiceover workflow", "Source-to-short repurposing"],
+    "uniqueAngle": "数字人口播 focuses on preparing reviewable TikTok assets from real content rather than generating disconnected trend clips.",
+    "faq": [
+      ["Does 数字人口播 post directly to TikTok?", "No. It prepares assets for your publishing workflow."],
+      ["Can I repurpose long videos for TikTok?", "Yes. Long source videos can be analyzed for short-form angles."],
+      ["Can captions be optimized for silent viewing?", "Yes. Captions and hook text can be reviewed for readability."],
+      ["Can I use it for product videos?", "Yes, as long as claims and visuals are reviewed before publishing."]
+    ],
+    "related": ["ai-short-video-generator", "ai-caption-generator", "long-video-to-short-video-ai", "instagram-reels-maker-ai", "content-repurposing-ai"]
+  },
+  {
+    "slug": "instagram-reels-maker-ai",
+    "category": "Platform workflows",
+    "primaryKeyword": "instagram reels maker ai",
+    "secondaryKeywords": ["ai reels maker", "instagram reels ai generator", "reels video maker ai"],
+    "searchIntent": "Users want Reels-ready assets from existing videos, scripts, or creator briefs.",
+    "title": "Instagram Reels Maker AI Workflow | 数字人口播",
+    "metaDescription": "Create Instagram Reels-ready scripts, captions, narration, and short-form assets from source footage with 数字人口播.",
+    "h1": "Instagram Reels Maker AI Workflow",
+    "kicker": "Reels-ready production assets",
+    "hero": "Turn source videos or briefs into Reels-ready scripts, captions, voiceover, and export assets with AI-assisted review.",
+    "pain": "Reels need a quick setup, clear visual story, and captions that help viewers understand without sound. An AI Reels maker is most useful when it helps structure the story before final editing.",
+    "workflow": [
+      "Upload a source video, transcript, or campaign brief.",
+      "Generate Reels angles with a visual hook and concise explanation.",
+      "Prepare captions and optional narration for short-form viewing.",
+      "Review the message, claims, and pacing before export.",
+      "Use exported assets in your Instagram publishing workflow."
+    ],
+    "who": ["Instagram creators", "Brand teams", "Course marketers", "Repurposing editors"],
+    "features": ["Short-form script drafts", "Caption planning", "Narration support", "Reviewable exports"],
+    "uniqueAngle": "数字人口播 helps teams reuse source content for Reels without losing the point of the original asset.",
+    "faq": [
+      ["Can I make Reels from long videos?", "Yes. Long videos can be repurposed into short-form assets."],
+      ["Does 数字人口播 publish to Instagram?", "No. It prepares assets for your publishing workflow."],
+      ["Can I use my brand tone?", "Use the brief and review stage to refine tone and wording."],
+      ["Can captions be included?", "Yes. Captions can be generated and reviewed as part of the workflow."]
+    ],
+    "related": ["ai-short-video-generator", "ai-caption-generator", "tiktok-video-editor-ai", "long-video-to-short-video-ai", "vlog-editing-app"]
+  },
+  {
+    "slug": "vlog-editing-app",
+    "category": "Creator scenarios",
+    "primaryKeyword": "vlog editing app",
+    "secondaryKeywords": ["vlog video editor", "ai vlog editor", "vlog editing workflow"],
+    "searchIntent": "Vlog creators want to turn long casual footage into clearer story-driven edits.",
+    "title": "Vlog Editing App Workflow with AI Scripts and Captions | 数字人口播",
+    "metaDescription": "Use 数字人口播 to organize vlog footage into scripts, captions, narration, highlights, and export-ready video assets.",
+    "h1": "Vlog Editing App Workflow with AI Scripts and Captions",
+    "kicker": "From raw vlog footage to story",
+    "hero": "Organize vlog recordings into clearer story beats, captions, narration, and short-form assets with AI-assisted review.",
+    "pain": "Vlog footage is often long, loose, and full of small moments. A useful vlog editing app helps identify the story, remove dead time, create captions, and repurpose highlights without forcing every edit to start from a blank timeline.",
+    "workflow": [
+      "Upload vlog recordings, transcript files, or a creator outline.",
+      "Analyze moments, topics, pacing, and useful visual context.",
+      "Generate a story outline or short-form clip plan.",
+      "Review captions, narration, and sequence before export.",
+      "Export assets for long-form vlogs, Shorts, Reels, or TikTok."
+    ],
+    "who": ["Vloggers", "Travel creators", "Lifestyle channels", "Creator assistants"],
+    "features": ["Story outline generation", "Caption and subtitle support", "Highlight planning", "Short-form repurposing"],
+    "uniqueAngle": "数字人口播 helps convert casual footage into a clearer narrative while keeping the creator in control of the final edit.",
+    "faq": [
+      ["Can 数字人口播 edit raw vlog footage automatically?", "It can help structure scripts, captions, narration, and assets, with final review before export."],
+      ["Can I create shorts from a vlog?", "Yes. Vlogs can be repurposed into short-form clips."],
+      ["Can it help with travel or lifestyle videos?", "Yes. Those formats often benefit from story outlines and caption support."],
+      ["Do I need subtitles?", "Subtitles are optional but useful for context, script generation, and silent viewing."]
+    ],
+    "related": ["long-video-to-short-video-ai", "instagram-reels-maker-ai", "ai-short-video-generator", "ai-caption-generator", "content-repurposing-ai"]
+  },
+  {
+    "slug": "gaming-highlight-maker",
+    "category": "Production use cases",
+    "primaryKeyword": "gaming highlight maker",
+    "secondaryKeywords": ["ai gaming highlight maker", "video game highlight maker", "gaming clips ai"],
+    "searchIntent": "Gaming creators want to turn long gameplay recordings into highlight clips with captions and context.",
+    "title": "Gaming Highlight Maker for AI-Assisted Clips | 数字人口播",
+    "metaDescription": "Create gaming highlight clips from long recordings with AI script support, captions, narration, review, and export-ready assets in 数字人口播.",
+    "h1": "Gaming Highlight Maker for AI-Assisted Clips",
+    "kicker": "Gameplay moments into clips",
+    "hero": "Turn gameplay recordings into highlight assets with captions, narration options, and reviewable short-form structure.",
+    "pain": "Gaming recordings can be hours long. The editing challenge is finding moments worth watching, adding enough context, and preparing captions or commentary that make the clip understandable to new viewers.",
+    "workflow": [
+      "Upload gameplay footage, stream segments, or a highlight brief.",
+      "Use subtitles, visual cues, and creator notes to identify moments.",
+      "Generate clip scripts, captions, or commentary around the highlight.",
+      "Review context, pacing, and any claims before export.",
+      "Export assets for Shorts, TikTok, Reels, or YouTube highlights."
+    ],
+    "who": ["Gaming creators", "Stream editors", "Esports content teams", "Community managers"],
+    "features": ["Long recording repurposing", "Caption support", "Commentary script generation", "Short-form export planning"],
+    "uniqueAngle": "数字人口播 helps turn gameplay into understandable short-form assets rather than leaving editors to search every moment manually.",
+    "faq": [
+      ["Can I upload stream recordings?", "Yes, if you own or are authorized to use the recording."],
+      ["Does it detect every kill or score automatically?", "数字人口播 supports analysis and workflow planning, but highlights should be reviewed manually before publishing."],
+      ["Can I add commentary?", "Yes. Commentary scripts and voiceover can be part of the workflow."],
+      ["Can it make clips for TikTok or Shorts?", "Yes. It can prepare short-form assets for those channels."]
+    ],
+    "related": ["sports-highlight-maker", "long-video-to-short-video-ai", "ai-short-video-generator", "ai-caption-generator", "ai-video-commentary-generator"]
+  },
+  {
+    "slug": "sports-highlight-maker",
+    "category": "Production use cases",
+    "primaryKeyword": "sports highlight maker",
+    "secondaryKeywords": ["ai sports highlight maker", "sports highlight reel maker", "sports clips ai"],
+    "searchIntent": "Sports editors want highlight reels from long matches or training footage.",
+    "title": "Sports Highlight Maker for Reviewable AI Workflows | 数字人口播",
+    "metaDescription": "Prepare sports highlight videos with AI-assisted analysis, captions, narration, scripts, review, and export-ready assets in 数字人口播.",
+    "h1": "Sports Highlight Maker for Reviewable AI Workflows",
+    "kicker": "Match footage into highlight assets",
+    "hero": "Create sports highlight assets from authorized match, training, or event footage with captions, scripts, and review steps.",
+    "pain": "Sports footage is dense. Editors need to locate key moments, add context, and make highlights understandable for fans, players, or internal teams. A sports highlight maker should support review because names, scores, and claims must be accurate.",
+    "workflow": [
+      "Upload authorized match footage, training video, or event recordings.",
+      "Analyze visual segments, commentary, subtitles, and notes where available.",
+      "Create highlight structure with setup, key moments, and closing context.",
+      "Review player names, scores, captions, and narration.",
+      "Export assets for social clips, internal review, or final editing."
+    ],
+    "who": ["Sports content teams", "Coaches and analysts", "Event editors", "Creator channels"],
+    "features": ["Highlight structure planning", "Caption and subtitle support", "Narration workflow", "Human accuracy review"],
+    "uniqueAngle": "数字人口播 supports sports highlights as a reviewed production workflow, which matters when factual details are visible to viewers.",
+    "faq": [
+      ["Can I use full match footage?", "Use only footage you own or are authorized to process."],
+      ["Can 数字人口播 verify scores automatically?", "Scores and names should always be reviewed by a human before publishing."],
+      ["Can highlights include narration?", "Yes. Narration and captions can be added after script review."],
+      ["Can this work for training footage?", "Yes. Training clips and internal review videos can benefit from structured highlights."]
+    ],
+    "related": ["gaming-highlight-maker", "long-video-to-short-video-ai", "ai-caption-generator", "ai-video-commentary-generator", "content-repurposing-ai"]
+  },
+  {
+    "slug": "content-repurposing-ai",
+    "category": "Production use cases",
+    "primaryKeyword": "content repurposing ai",
+    "secondaryKeywords": ["ai content repurposing", "repurpose video content with ai", "video repurposing ai"],
+    "searchIntent": "Teams want one source asset to produce multiple channel-ready outputs.",
+    "title": "Content Repurposing AI for Video Teams | 数字人口播",
+    "metaDescription": "Repurpose videos into scripts, subtitles, captions, voiceover, recaps, and short-form assets with 数字人口播's reviewable AI workflow.",
+    "h1": "Content Repurposing AI for Video Teams",
+    "kicker": "One source, many reviewed assets",
+    "hero": "Repurpose long videos, recordings, and briefs into scripts, subtitles, captions, narration, recaps, and short-form assets.",
+    "pain": "Content teams often record once and publish many times. The bottleneck is turning a source asset into channel-specific versions without losing context or creating low-quality duplicates. Content repurposing AI should help teams create useful assets, not just spin text.",
+    "workflow": [
+      "Upload a source recording, webinar, podcast, course, vlog, or campaign video.",
+      "Analyze subtitles, scenes, topics, and distribution opportunities.",
+      "Generate scripts, recap structures, captions, and narration-ready drafts.",
+      "Review every asset for accuracy, tone, and channel fit.",
+      "Export assets for YouTube, Shorts, Reels, TikTok, internal teams, or manual editing."
+    ],
+    "who": ["Content operations teams", "Agencies", "Course publishers", "Founder-led marketing teams"],
+    "features": ["Multi-asset planning", "Subtitle and script reuse", "Voiceover workflow", "Internal review loop"],
+    "uniqueAngle": "数字人口播 gives teams a repeatable video repurposing workflow while keeping review and source context visible.",
+    "faq": [
+      ["Can one source become multiple assets?", "Yes. A single video can support scripts, recaps, captions, subtitles, and short-form ideas."],
+      ["Is this automated content spinning?", "No. The workflow is designed around source understanding, human review, and useful output."],
+      ["Can teams review before export?", "Yes. Review is a core part of the workflow."],
+      ["Which channels does this support?", "It can prepare assets for YouTube, Shorts, TikTok, Reels, education, and internal content workflows."]
+    ],
+    "related": ["long-video-to-short-video-ai", "ai-video-script-generator", "ai-video-commentary-generator", "podcast-clip-maker", "ai-short-video-generator"]
+  },
+  {
+    "slug": "best-opusclip-alternatives",
+    "category": "Production use cases",
+    "primaryKeyword": "OpusClip alternatives",
+    "secondaryKeywords": [
+      "best OpusClip alternative",
+      "OpusClip vs Vizard",
+      "AI video clipping tools",
+      "long video to shorts"
+    ],
+    "searchIntent": "Creators want to compare OpusClip alternatives for clipping long videos into publishable short-form assets.",
+    "title": "Best OpusClip Alternatives for AI Video Clipping | 数字人口播",
+    "metaDescription": "Compare 数字人口播, Vizard, Klap, Descript, CapCut, Kapwing, and VEED as OpusClip alternatives for long-form video clipping workflows.",
+    "h1": "Best OpusClip Alternatives for AI Video Clipping in 2026",
+    "kicker": "AI clipping comparison",
+    "hero": "Compare OpusClip alternatives for story-driven clips, captions, export limits, manual editing control, and long-video-to-short workflows.",
+    "pain": "Creators comparing OpusClip alternatives need to understand which tool fits their source video, review process, caption workflow, and publishing limits before committing to a paid plan.",
+    "workflow": [
+      "Start with one representative long video that matches your normal publishing workflow.",
+      "Compare how each tool identifies moments, structures the clip, and handles captions.",
+      "Review export limits, watermark rules, storage windows, and editing control.",
+      "Check whether the short clip makes sense without the full original video.",
+      "Choose the tool that produces the most publishable first draft with the least cleanup."
+    ],
+    "who": [
+      "YouTube creators",
+      "Movie recap channels",
+      "Commentary editors",
+      "Marketing teams"
+    ],
+    "features": [
+      "Story-driven clip structure",
+      "Caption-aware review",
+      "Long-video repurposing",
+      "Export workflow comparison"
+    ],
+    "uniqueAngle": "数字人口播 belongs in this comparison for creators who care about narrative structure and reviewable first drafts, not only one-click highlight detection.",
+    "faq": [
+      [
+        "What is the best OpusClip alternative?",
+        "The best alternative depends on your workflow. 数字人口播 fits story-driven clips, while tools like Vizard, Klap, Descript, CapCut, VEED, and Kapwing fit different editing needs."
+      ],
+      [
+        "Is 数字人口播 the same kind of tool as OpusClip?",
+        "No. 数字人口播 is positioned around reviewed, story-aware video workflows rather than only automated highlight clipping."
+      ],
+      [
+        "Should I use a manual editor instead?",
+        "Use a manual editor when you already know the exact clip and need detailed timeline control. Use an AI workflow when discovery, captions, and structure are the bottleneck."
+      ],
+      [
+        "How should I test these tools?",
+        "Use one real source video and compare clip quality, caption cleanup, watermark rules, and export effort."
+      ]
+    ],
+    "related": [
+      "best-ai-clip-generators",
+      "best-tools-to-turn-long-videos-into-shorts",
+      "long-video-to-short-video-ai",
+      "ai-short-video-generator",
+      "content-repurposing-ai"
+    ]
+  },
+  {
+    "slug": "best-ai-clip-generators",
+    "category": "Core workflows",
+    "primaryKeyword": "best AI clip generator",
+    "secondaryKeywords": [
+      "AI clip generator",
+      "long video to shorts AI",
+      "AI video clipping tool",
+      "AI shorts generator"
+    ],
+    "searchIntent": "Creators want to find an AI clip generator that turns long videos into short clips that are worth reviewing and publishing.",
+    "title": "Best AI Clip Generators for Long Videos | 数字人口播",
+    "metaDescription": "Compare the best AI clip generators for turning podcasts, interviews, webinars, and YouTube videos into Shorts, TikToks, and Reels.",
+    "h1": "Best AI Clip Generators for Turning Long Videos into Shorts in 2026",
+    "kicker": "AI clip generator comparison",
+    "hero": "Compare AI clip generators by clip selection, captions, aspect ratios, export limits, and how much cleanup is needed before publishing.",
+    "pain": "A tool can generate many clips and still miss the moments people would share. Creators need clip selection, captions, framing, and review controls that produce publishable short videos.",
+    "workflow": [
+      "Upload a long video that represents your normal publishing workflow.",
+      "Generate candidate clips and review whether each one has a clear hook and ending.",
+      "Check captions, framing, aspect ratio, title direction, and export limits.",
+      "Compare how much cleanup each tool needs before the clip can be posted.",
+      "Use the workflow that creates the best publishable first draft, not just the most clips."
+    ],
+    "who": [
+      "Short-form creators",
+      "Podcast editors",
+      "Webinar marketers",
+      "YouTube teams"
+    ],
+    "features": [
+      "Clip selection comparison",
+      "Caption review",
+      "Aspect ratio planning",
+      "Long-video repurposing"
+    ],
+    "uniqueAngle": "数字人口播 is strongest when clips need story logic, recap structure, or context that survives outside the original long video.",
+    "faq": [
+      [
+        "What is an AI clip generator?",
+        "It is a tool that analyzes longer videos and creates short clips for channels like Shorts, TikTok, and Reels."
+      ],
+      [
+        "What should I test first?",
+        "Use a real source video and check whether the generated clip makes sense without the full original."
+      ],
+      [
+        "Is the best tool always the fastest one?",
+        "No. The best tool is the one that produces clips that are actually worth reviewing and publishing."
+      ],
+      [
+        "Where does 数字人口播 fit?",
+        "数字人口播 fits story-driven clips, commentary, recaps, and explainers where context matters."
+      ]
+    ],
+    "related": [
+      "best-opusclip-alternatives",
+      "best-tools-to-turn-long-videos-into-shorts",
+      "long-video-to-short-video-ai",
+      "ai-youtube-shorts-generator",
+      "podcast-clip-maker"
+    ]
+  },
+  {
+    "slug": "best-ai-video-editors-with-free-trials",
+    "category": "Production use cases",
+    "primaryKeyword": "AI video editor free trial",
+    "secondaryKeywords": [
+      "best AI video editors with free trials",
+      "AI video editor free plan",
+      "AI video editor no credit card",
+      "AI video editor watermark"
+    ],
+    "searchIntent": "Creators want to compare AI video editors with free plans or trials before uploading real long-form videos.",
+    "title": "Best AI Video Editors with Free Trials | 数字人口播",
+    "metaDescription": "Compare AI video editors with free plans or trials, including 数字人口播, OpusClip, Vizard, Descript, CapCut, VEED, Kapwing, Submagic, and Riverside.",
+    "h1": "Best AI Video Editors with Free Trials in 2026",
+    "kicker": "Free trial comparison",
+    "hero": "Compare AI video editor trials by watermark rules, export limits, credits, upload length, and how well they handle real source videos.",
+    "pain": "A free trial is only useful if it lets users test the real workflow: upload a real video, generate captions or clips, edit the result, and export something close to publishable.",
+    "workflow": [
+      "Choose one real source video instead of a polished sample clip.",
+      "Upload it to each trial and run the same clipping or subtitle task.",
+      "Record generated clip quality, caption cleanup, watermark rules, and export limits.",
+      "Compare how long it takes to reach a publishable result.",
+      "Pick the editor whose free trial best reflects your paid workflow needs."
+    ],
+    "who": [
+      "Solo creators",
+      "Marketing teams",
+      "Agencies",
+      "Video editors evaluating tools"
+    ],
+    "features": [
+      "Trial limit comparison",
+      "Watermark checks",
+      "Caption workflow testing",
+      "Export quality review"
+    ],
+    "uniqueAngle": "数字人口播 is a useful trial candidate when you need to test whether AI can create a structured first draft from a real long-form video.",
+    "faq": [
+      [
+        "What should I check in an AI video editor free trial?",
+        "Check upload length, AI credits, watermark rules, export quality, and whether you can test a real video."
+      ],
+      [
+        "Do free AI video editors always add watermarks?",
+        "No. Some tools offer clean exports, while others watermark free exports. Always test the actual export path."
+      ],
+      [
+        "Should I test with a short sample?",
+        "No. Use a representative 15 to 30 minute video if that is what you normally publish from."
+      ],
+      [
+        "Where does 数字人口播 fit?",
+        "数字人口播 fits trials where you want to evaluate story-driven clips, captions, and reviewed first drafts."
+      ]
+    ],
+    "related": [
+      "best-ai-clip-generators",
+      "best-opusclip-alternatives",
+      "best-tools-to-turn-long-videos-into-shorts",
+      "ai-caption-generator",
+      "long-video-to-short-video-ai"
+    ]
+  },
+  {
+    "slug": "best-free-ai-subtitle-generators-no-watermark",
+    "category": "Core workflows",
+    "primaryKeyword": "free AI subtitle generator no watermark",
+    "secondaryKeywords": [
+      "AI subtitle generator no watermark",
+      "free auto captions no watermark",
+      "best free subtitle generator",
+      "add subtitles to video free no watermark"
+    ],
+    "searchIntent": "Creators want to know which AI subtitle generators can produce clean captioned videos without a watermark.",
+    "title": "Best Free AI Subtitle Generators with No Watermark | 数字人口播",
+    "metaDescription": "A practical guide to free AI subtitle generators, clean exports, watermarks, and which tools are actually free enough to publish with.",
+    "h1": "Best Free AI Subtitle Generators with No Watermark in 2026",
+    "kicker": "Subtitle tool comparison",
+    "hero": "Compare free AI subtitle tools by watermark reality, burned-in caption exports, subtitle files, platform captions, and story workflow fit.",
+    "pain": "Most free subtitle tools are free until export. Creators need to know whether the final MP4 is clean, watermarked, capped, or limited to subtitle-file downloads.",
+    "workflow": [
+      "Decide whether you need a captioned MP4, subtitle file, or platform-only captions.",
+      "Generate subtitles on a real short video and inspect timing and line breaks.",
+      "Export the result to verify watermark rules and quality limits.",
+      "Check whether captions can support downstream scripts, clips, or review workflows.",
+      "Use the tool that gives clean output for your publishing channel."
+    ],
+    "who": [
+      "Short-form creators",
+      "Subtitle editors",
+      "Course teams",
+      "Social media managers"
+    ],
+    "features": [
+      "Watermark comparison",
+      "Caption workflow review",
+      "Subtitle export planning",
+      "Story-aware caption context"
+    ],
+    "uniqueAngle": "数字人口播 fits creators who want subtitles inside a larger story workflow for clips, scripts, captions, and review.",
+    "faq": [
+      [
+        "What does no watermark mean?",
+        "For most creators, it means the exported video file has captions but no tool logo or branded overlay."
+      ],
+      [
+        "Are subtitle files the same as burned-in captions?",
+        "No. SRT or VTT files are separate text tracks, while burned-in captions are part of the video image."
+      ],
+      [
+        "Can 数字人口播 help with captions?",
+        "Yes. 数字人口播 uses subtitles and captions as part of broader video workflows such as clips, commentary, and recaps."
+      ],
+      [
+        "Should I verify the export before publishing?",
+        "Yes. Always download the final file and check watermark, quality, and timing before posting."
+      ]
+    ],
+    "related": [
+      "ai-subtitle-generator",
+      "ai-caption-generator",
+      "best-ai-video-editors-with-free-trials",
+      "best-ai-clip-generators",
+      "long-video-to-short-video-ai"
+    ]
+  },
+  {
+    "slug": "best-tools-to-turn-long-videos-into-shorts",
+    "category": "Core workflows",
+    "primaryKeyword": "turn long videos into shorts",
+    "secondaryKeywords": [
+      "long video to shorts AI",
+      "turn YouTube video into Shorts",
+      "AI shorts generator",
+      "repurpose long videos into short clips"
+    ],
+    "searchIntent": "Creators want practical tools for turning long-form videos into Shorts, TikToks, and Reels.",
+    "title": "Best Tools to Turn Long Videos into Shorts | 数字人口播",
+    "metaDescription": "Compare tools that turn long videos into Shorts, TikToks, and Reels: 数字人口播, OpusClip, Vizard, Klap, Descript, CapCut, VEED, Kapwing, and Riverside.",
+    "h1": "Best Tools to Turn Long Videos into Shorts in 2026",
+    "kicker": "Long video to Shorts comparison",
+    "hero": "Compare tools for turning long videos into Shorts by highlight detection, captions, reframing, transcript editing, team workflow, and final polish.",
+    "pain": "A good Short needs a hook, enough context, captions, the right aspect ratio, and an ending that does not feel accidentally chopped off.",
+    "workflow": [
+      "Decide whether you need AI to find the clip or only to edit a known moment.",
+      "Upload one long source video and generate candidate Shorts.",
+      "Review hook, context, captions, framing, and ending quality.",
+      "Polish the best drafts in the tool or a manual editor when needed.",
+      "Publish the workflow that consistently creates useful Shorts from long videos."
+    ],
+    "who": [
+      "YouTube creators",
+      "Podcast teams",
+      "Webinar marketers",
+      "Movie recap creators"
+    ],
+    "features": [
+      "Highlight detection comparison",
+      "Story-driven Shorts",
+      "Caption and reframing review",
+      "Manual finishing guidance"
+    ],
+    "uniqueAngle": "数字人口播 is useful when the short needs a clear setup, payoff, captions, and structure rather than a single isolated quote.",
+    "faq": [
+      [
+        "What is the easiest way to turn long videos into Shorts?",
+        "Use an AI clip generator to create drafts, then polish the best clip before publishing."
+      ],
+      [
+        "Can I turn YouTube videos into Shorts automatically?",
+        "Yes, if you own or are authorized to use the source video. Always review the result before posting."
+      ],
+      [
+        "What is the best free option?",
+        "CapCut is a strong free finishing editor, while AI clip tools vary by watermark, credits, and export limits."
+      ],
+      [
+        "Where does 数字人口播 fit?",
+        "数字人口播 fits long videos where Shorts need story structure, captions, and context."
+      ]
+    ],
+    "related": [
+      "long-video-to-short-video-ai",
+      "best-ai-clip-generators",
+      "best-opusclip-alternatives",
+      "ai-youtube-shorts-generator",
+      "content-repurposing-ai"
+    ]
+  }
+]
