@@ -14,7 +14,7 @@ function Destination() {
 
 it('keeps the protected destination when authentication finishes on the login route', async () => {
   const app = () => <MemoryRouter initialEntries={[{pathname: '/login', state: {
-    from: {pathname: '/avatar-mvp', search: '?task_id=task-1'},
+    from: {pathname: '/workspace/project-1', search: '?intent=demo'},
   }}]}>
     <Routes>
       <Route path="/login" element={<PublicRoute><div>Login form</div></PublicRoute>} />
@@ -25,5 +25,5 @@ it('keeps the protected destination when authentication finishes on the login ro
   expect(screen.getByText('Login form')).toBeTruthy()
   auth.isAuthenticated = true
   view.rerender(app())
-  expect(await screen.findByText('/avatar-mvp?task_id=task-1')).toBeTruthy()
+  expect(await screen.findByText('/workspace/project-1?intent=demo')).toBeTruthy()
 })

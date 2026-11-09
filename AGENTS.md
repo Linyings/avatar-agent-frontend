@@ -4,6 +4,7 @@
 - 第三方 API Key 只放在 WSL 服务端 `.env`，禁止写入前端、Git 或日志；保留现有数据库、任务素材、模型缓存，禁止 `docker compose down -v`。
 - 保留来源与许可；参考仓库只读。上游版本记录见 UPSTREAM.json。依赖继续使用已有锁文件。
 - 始终使用中文进行交互
+- 当前默认入口为 `/`，制作入口为 `/workspace/:projectId`。旧版表单 UI 已删除，`/avatar-mvp` 只保留到首页的重定向，不能恢复为旧页面。
 - 若无特殊要求，所有技术栈均使用最新版本，使用 context7 工具
 - 默认使用 TDD 开发规范
 - 使用 postcss-preset-mantine 将主题、响应式和样式体系统一起来

@@ -1,5 +1,13 @@
 import '@testing-library/jest-dom/vitest'
 
+// jsdom does not expose the Font Loading API used by Mantine autosizing fields.
+if (!document.fonts) {
+  Object.defineProperty(document, 'fonts', {
+    configurable: true,
+    value: new EventTarget(),
+  })
+}
+
 if (!globalThis.localStorage?.getItem) {
   const memory = new Map<string, string>()
   const storage = {

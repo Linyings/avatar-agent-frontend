@@ -60,7 +60,6 @@ const SIDEBAR_COLLAPSED_WIDTH = 82
 const navItems: InternalNavItem[] = [
   { to: '/dashboard', label: '仪表盘', icon: ChartBarIcon },
   { to: '/projects', label: '项目', icon: FolderOpenIcon },
-  { to: '/projects?mode=avatar', label: '数字人口播', icon: ChatBubbleLeftRightIcon },
   { to: '/subscription', label: '订阅充值', icon: CreditCardIcon },
   { to: '/consumption-records', label: '消费记录', icon: TableCellsIcon },
 ]
@@ -160,13 +159,7 @@ export default function AppLayout({
 
             <div className={classes.links}>
               {navItems.map((item) => {
-                const avatarList = location.pathname === '/projects' && new URLSearchParams(location.search).get('mode') === 'avatar'
-                const avatarProject = /^\/projects\/[^/]+\/avatar(?:\/|$)/.test(location.pathname)
-                const active = item.to === '/projects?mode=avatar'
-                  ? avatarList || avatarProject
-                  : item.to === '/projects'
-                    ? location.pathname.startsWith('/projects') && !avatarList && !avatarProject
-                    : location.pathname.startsWith(item.to)
+                const active = location.pathname.startsWith(item.to)
                 return (
                   <NavItem
                     key={item.to}

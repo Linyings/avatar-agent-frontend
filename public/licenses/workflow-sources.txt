@@ -1,0 +1,12 @@
+Workflow canvas dependencies
+
+React Flow: @xyflow/react 12.12.1; @xyflow/system 0.0.84
+Copyright (c) 2019-2025 webkid GmbH
+License: MIT (see xyflow-MIT.txt)
+Source: https://github.com/xyflow/xyflow
+Reference commit: 1bc405cd113618c17fd181b931a9fe573bec9fee
+
+ELK.js: elkjs 0.12.1
+License used here: Eclipse Public License 2.0 (see elkjs-EPL-2.0.txt)
+Unmodified source corresponding to this package: https://github.com/kieler/elkjs/tree/0.12.1
+Packages are consumed without modifying upstream source.

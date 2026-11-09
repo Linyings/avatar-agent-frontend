@@ -7,6 +7,7 @@ const projectDetailMocks = vi.hoisted(() => ({
   clearError: vi.fn(),
   loadProject: vi.fn(),
   materialShouldThrow: true,
+  avatarProject: false,
 }))
 
 vi.mock('@/features/projects', () => ({
@@ -26,7 +27,7 @@ vi.mock('@/features/projects', () => ({
         stages: {},
       },
       artifacts: {},
-      metadata: {},
+      metadata: { inference_mode: projectDetailMocks.avatarProject ? 'avatar' : 'frame' },
     },
     isLoading: false,
     error: null,
@@ -74,6 +75,7 @@ function renderProjectDetailPage(initialEntry = '/projects/project-1/material/up
             )}
           />
           <Route path="/projects" element={<div>项目列表</div>} />
+          <Route path="/workspace/:projectId" element={<div>新版 Agent 工作台</div>} />
         </Routes>
       </MemoryRouter>
     </MantineProvider>
@@ -84,6 +86,13 @@ describe('ProjectDetailPage stage error boundary', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     projectDetailMocks.materialShouldThrow = true
+    projectDetailMocks.avatarProject = false
+  })
+
+  it('opens avatar projects in the Agent workspace instead of the removed form', async () => {
+    projectDetailMocks.avatarProject = true
+    renderProjectDetailPage('/projects/project-1/avatar')
+    expect(await screen.findByText('新版 Agent 工作台')).toBeInTheDocument()
   })
 
   it('隔离 stage 渲染异常，并在切换 stage 后自动恢复', async () => {

@@ -1,10 +1,12 @@
 import { lazy, Suspense } from 'react'
-import { Navigate, Routes, Route } from 'react-router-dom'
+import { Navigate, Routes, Route, useParams, useSearchParams } from 'react-router-dom'
 import { Center, Group, Loader, Text } from '@mantine/core'
 import { PublicRoute, PrivateRoute, AdminRoute } from '@/features/auth'
 import AppLayout from '@/shared/components/layout/AppLayout'
 
 const HomePage = lazy(() => import('@/pages/HomePage'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
+const NewHomePage = lazy(() => import('@/pages/NewHomePage'))
 const ResourcesPage = lazy(() => import('@/pages/resources/ResourcesPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
@@ -17,8 +19,8 @@ const ProjectListPage = lazy(() => import('@/pages/ProjectListPage'))
 const ProjectDetailPage = lazy(() => import('@/pages/ProjectDetailPage'))
 const FrameInferenceDebugPage = lazy(() => import('@/features/projects/debug/FrameInferenceDebugPage'))
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
-const AvatarMvpPage = lazy(() => import('@/features/avatarMvp/AvatarMvpPage'))
 const FlovaHomePage = lazy(() => import('@/pages/FlovaHomePage'))
+const WorkspacePage = lazy(() => import('@/pages/WorkspacePage'))
 const ProfilePage = lazy(() => import('@/pages/ProfilePage'))
 const SubscriptionPage = lazy(() => import('@/pages/SubscriptionPage'))
 const ConsumptionRecordsPage = lazy(() => import('@/pages/ConsumptionRecordsPage'))
@@ -43,15 +45,38 @@ function RouteFallback() {
   )
 }
 
+/** 旧「制作前沟通」链接重定向到工作台，并保留 topic 作为初始意图。 */
+function LegacyPreProductionRedirect() {
+  const { projectId = '' } = useParams<{ projectId: string }>()
+  const [searchParams] = useSearchParams()
+  const topic = searchParams.get('topic') ?? ''
+  const target = `/workspace/${projectId}${topic ? `?intent=${encodeURIComponent(topic)}` : ''}`
+  return <Navigate to={target} replace />
+}
+
 export default function AppRoutes() {
   return (
     <Suspense fallback={<RouteFallback />}>
       <Routes>
         {/* 门户首页 - 公开访问 */}
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<NewHomePage />} />
+
+        {/* 原首页保留（开发调试用）*/}
+        <Route path="/home-legacy" element={<HomePage />} />
 
         {/* Flova 风格首页克隆 */}
         <Route path="/flova-home" element={<FlovaHomePage />} />
+
+        {/* Agent 工作台 */}
+        <Route path="/workspace/:projectId" element={
+          <PrivateRoute>
+            <WorkspacePage />
+          </PrivateRoute>
+        } />
+
+        {/* 旧「制作前沟通」页面已废弃：意图解析与确认统一在 Agent 对话窗口完成。
+            保留重定向，避免旧链接/书签 404。 */}
+        <Route path="/pre-production/:projectId" element={<LegacyPreProductionRedirect />} />
 
         {/* SEO 资源矩阵 - 公开访问 */}
         <Route path="/resources" element={<ResourcesPage />} />
@@ -85,11 +110,7 @@ export default function AppRoutes() {
         } />
 
         {/* 私有路由 - 需要认证 */}
-        <Route path="/avatar-mvp" element={
-          <PrivateRoute>
-            <AppLayout><AvatarMvpPage /></AppLayout>
-          </PrivateRoute>
-        } />
+        <Route path="/avatar-mvp" element={<Navigate to="/" replace />} />
         <Route path="/dashboard" element={
           <PrivateRoute>
             <AppLayout>
@@ -120,9 +141,7 @@ export default function AppRoutes() {
         } />
         <Route path="/projects" element={
           <PrivateRoute>
-            <AppLayout>
-              <ProjectListPage />
-            </AppLayout>
+            <ProjectListPage />
           </PrivateRoute>
         } />
         <Route path="/projects/:projectId" element={
@@ -207,6 +226,7 @@ export default function AppRoutes() {
             </AppLayout>
           </AdminRoute>
         } />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   )

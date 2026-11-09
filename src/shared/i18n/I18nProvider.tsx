@@ -18,7 +18,9 @@ import { defaultLocale, isLocale, type Locale } from './locales'
 
 const STORAGE_KEY = 'narratoai-locale'
 const textNodeOriginals = new WeakMap<Text, string>()
+const textNodeRendered = new WeakMap<Text, string>()
 const attrOriginals = new WeakMap<Element, Map<string, string>>()
+const attrRendered = new WeakMap<Element, Map<string, string>>()
 const inputValueOriginals = new WeakMap<HTMLInputElement, string>()
 const translatedAttributeNames = ['aria-label', 'title', 'placeholder', 'alt']
 
@@ -1157,12 +1159,20 @@ function translateAttributes(element: Element, locale: Locale) {
       attrOriginals.set(element, originals)
     }
 
-    if (!originals.has(attributeName)) {
+    let rendered = attrRendered.get(element)
+    if (!rendered) {
+      rendered = new Map()
+      attrRendered.set(element, rendered)
+    }
+
+    // A React update is a new source value, not a stale translation to restore.
+    if (!originals.has(attributeName) || current !== rendered.get(attributeName)) {
       originals.set(attributeName, current)
     }
 
     const original = originals.get(attributeName) ?? current
     const translated = translateText(original, locale)
+    rendered.set(attributeName, translated)
 
     if (current !== translated) {
       element.setAttribute(attributeName, translated)
@@ -1179,12 +1189,13 @@ function translateNode(node: Node, locale: Locale) {
     const normalized = current.trim()
     if (!normalized) return
 
-    if (!textNodeOriginals.has(textNode)) {
+    if (!textNodeOriginals.has(textNode) || current !== textNodeRendered.get(textNode)) {
       textNodeOriginals.set(textNode, current)
     }
 
     const original = textNodeOriginals.get(textNode) ?? current
     const translated = translateText(original, locale)
+    textNodeRendered.set(textNode, translated)
     if (current !== translated) {
       textNode.nodeValue = translated
     }

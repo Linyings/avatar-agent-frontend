@@ -10,7 +10,7 @@ npm test -- --run
 
 日常开发执行 `npm run dev`；API 地址在本地 `.env.local` 配置 `VITE_API_BASE_URL=http://localhost:8080`，与现有 WSL 服务连接。模型密钥只保存在 WSL 服务端，不能写入任何 `VITE_*` 配置。依赖和包名沿用已有锁文件。
 
-更新本机实际部署：从后端仓库执行 `deploy/wsl2/deploy.ps1 -Service frontend -FrontendPath <本仓库绝对路径>`。服务仍使用 `Ubuntu-24.04` 的 Docker，入口为 `http://localhost:8080/avatar-mvp`；仅前端更新不重建或重启 API。若本仓库位于后端工作区的 `frontend/`，可省略 `-FrontendPath`。部署后需实测页面与 API 可访问性。
+更新本机实际部署：从后端仓库执行 `deploy/wsl2/deploy.ps1 -Service frontend -FrontendPath <本仓库绝对路径>`。服务仍使用 `Ubuntu-24.04` 的 Docker，新版首页入口为 `http://localhost:8080/`，Agent 工作台为 `/workspace/:projectId`；旧表单页面代码已删除，`/avatar-mvp` 仅重定向到首页。仅前端更新不重建或重启 API。若本仓库位于后端工作区的 `frontend/`，可省略 `-FrontendPath`。部署后运行 `deploy/wsl2/verify-current-browser.cjs` 实测页面、登录及工作台。
 
 前端的提交和推送只在本仓库中执行；不要在后端仓库强制添加 `frontend/`。默认分支为 `main`，`origin` 为私有仓库 [Linyings/avatar-agent-frontend](https://github.com/Linyings/avatar-agent-frontend)。配套后端为 [Linyings/avatar-agent-backend](https://github.com/Linyings/avatar-agent-backend)。
 

@@ -29,7 +29,6 @@ declare global {
   }
 }
 
-const AvatarStage = React.lazy(() => import('@/features/avatarMvp/AvatarMvpPage'))
 const MaterialStage = React.lazy(() => import('@/features/projects/components/stages/MaterialStage'))
 const AnalysisStage = React.lazy(() => import('@/features/projects/components/stages/AnalysisStage'))
 const DubbingStage = React.lazy(() => import('@/features/projects/components/stages/DubbingStage'))
@@ -168,7 +167,7 @@ const ProjectDetailPage: React.FC = () => {
     if (!projectId || !currentProject || isLoading) return
 
     if (avatarProject) {
-      if (stage !== 'avatar') navigate(`/projects/${projectId}/avatar`, { replace: true })
+      navigate(`/workspace/${projectId}`, { replace: true })
       return
     }
 
@@ -179,7 +178,7 @@ const ProjectDetailPage: React.FC = () => {
 
   const renderStageContent = () => {
     if (!projectId) return null
-    if (avatarProject || stage === 'avatar') return <AvatarStage projectId={projectId} />
+    if (avatarProject || stage === 'avatar') return <StageLoadingState label="正在打开工作台..." />
 
     switch (stage) {
       case 'material':
