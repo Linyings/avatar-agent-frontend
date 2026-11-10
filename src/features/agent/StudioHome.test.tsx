@@ -22,7 +22,7 @@ beforeEach(()=>{
  vi.clearAllMocks()
  sessionStorage.clear()
  api.catalog.mockReset().mockResolvedValue({styles:[{id:'mg-isometric',name:'等轴 2.5D',published:true,legacy:false,preview:'/catalog/isometric/preview'}]})
- api.voices.mockReset().mockResolvedValue({default_voice:'Wise_Woman',voices:[{id:'Wise_Woman',name:'睿智女声 · Wise Woman'},{id:'Calm_Woman',name:'沉稳女声 · Calm Woman'}]})
+ api.voices.mockReset().mockResolvedValue({default_voice:'Wise_Woman',default_voice_model:'minimax/speech-2.8-hd',voices:[],voice_models:[{id:'minimax/speech-2.8-hd',name:'MiniMax Speech 2.8 HD',default_voice:'Wise_Woman',supports_speed:true,voices:[{id:'Wise_Woman',name:'睿智女声 · Wise Woman'},{id:'Calm_Woman',name:'沉稳女声 · Calm Woman'}]},{id:'kling-lip-sync/tts',name:'可灵 Kling TTS',default_voice:'genshin_vindi2',supports_speed:true,voices:[{id:'dongbeilaotie_speech02',name:'东北老铁'}]}]})
  Object.defineProperty(document,'fonts',{configurable:true,value:{addEventListener:vi.fn(),removeEventListener:vi.fn()}})
  api.create.mockResolvedValue({id:'isolated-draft'});api.upload.mockRejectedValue(new Error('文件无法解码或不符合图片/视频要求'))
  Object.defineProperty(URL,'createObjectURL',{configurable:true,value:vi.fn(()=> 'blob:isolated-preview')})
@@ -37,18 +37,27 @@ it('restores the saved style and ratio after sign-in',async()=>{
  expect(screen.getByRole('button',{name:'动效风格：等轴 2.5D'})).toBeVisible()
  expect(screen.getByRole('textbox',{name:'描述视频创意'})).toHaveValue('登录前的口播主题')
  fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
- await waitFor(()=>expect(api.create).toHaveBeenCalledWith('登录前的口播主题','16:9','mg-isometric',[],''))
+ await waitFor(()=>expect(api.create).toHaveBeenCalledWith('登录前的口播主题','16:9','mg-isometric',[],'',''))
  expect(sessionStorage.getItem('studio-options')).toBeNull()
 })
 
 it('creates the project with the chosen voice and restores it after sign-in',async()=>{
- sessionStorage.setItem('studio-options',JSON.stringify({ratio:'9:16',voice:{id:'Calm_Woman',name:'沉稳女声 · Calm Woman'}}))
+ sessionStorage.setItem('studio-options',JSON.stringify({ratio:'9:16',voice:{id:'Calm_Woman',name:'沉稳女声 · Calm Woman',model:'minimax/speech-2.8-hd'}}))
  render(<MantineProvider><MemoryRouter><StudioHome/><Location/></MemoryRouter></MantineProvider>)
  expect(await screen.findByRole('button',{name:'配音音色：沉稳女声 · Calm Woman'})).toBeVisible()
  fireEvent.change(screen.getByRole('textbox',{name:'描述视频创意'}),{target:{value:'选好音色再创建'}})
  fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
- await waitFor(()=>expect(api.create).toHaveBeenCalledWith('选好音色再创建','9:16','',[],'Calm_Woman'))
+ await waitFor(()=>expect(api.create).toHaveBeenCalledWith('选好音色再创建','9:16','',[],'Calm_Woman','minimax/speech-2.8-hd'))
  expect(screen.getByRole('button',{name:'配音音色：沉稳女声 · Calm Woman'})).toBeDisabled()
+})
+
+it('creates the project with a voice from another model',async()=>{
+ sessionStorage.setItem('studio-options',JSON.stringify({ratio:'9:16',voice:{id:'dongbeilaotie_speech02',name:'东北老铁',model:'kling-lip-sync/tts'}}))
+ render(<MantineProvider><MemoryRouter><StudioHome/><Location/></MemoryRouter></MantineProvider>)
+ expect(await screen.findByRole('button',{name:'配音音色：可灵 Kling TTS · 东北老铁'})).toBeVisible()
+ fireEvent.change(screen.getByRole('textbox',{name:'描述视频创意'}),{target:{value:'东北话口播'}})
+ fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
+ await waitFor(()=>expect(api.create).toHaveBeenCalledWith('东北话口播','9:16','',[],'dongbeilaotie_speech02','kling-lip-sync/tts'))
 })
 it('replaces only the failed file and keeps earlier uploads without creating another project',async()=>{
  api.upload.mockReset().mockResolvedValueOnce({}).mockRejectedValueOnce(new Error('上传中断')).mockResolvedValueOnce({})
@@ -121,7 +130,7 @@ it('adds multiple reference links and rejects unsafe URLs before creating a proj
  fireEvent.change(screen.getByRole('textbox',{name:'描述视频创意'}),{target:{value:'参考这些页面制作视频'}})
  fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
  await waitFor(()=>expect(screen.getByTestId('route')).toHaveTextContent('/workspace/isolated-draft'))
- expect(api.create).toHaveBeenCalledWith('参考这些页面制作视频','9:16','',['https://example.com/a','https://example.com/b'],'')
+ expect(api.create).toHaveBeenCalledWith('参考这些页面制作视频','9:16','',['https://example.com/a','https://example.com/b'],'','')
 })
 
 it('creates a portrait project with the selected motion style and keeps it on upload retry',async()=>{
@@ -141,7 +150,7 @@ it('creates a portrait project with the selected motion style and keeps it on up
  fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
  await waitFor(()=>expect(screen.getByTestId('route')).toHaveTextContent('/workspace/isolated-draft'))
  expect(api.create).toHaveBeenCalledTimes(1)
- expect(api.create).toHaveBeenCalledWith('只在主题里写口播也保留动效','9:16','mg-isometric',[],'')
+ expect(api.create).toHaveBeenCalledWith('只在主题里写口播也保留动效','9:16','mg-isometric',[],'','')
  expect(api.upload.mock.calls.map(call=>call[2])).toEqual(['photo','photo'])
 })
 

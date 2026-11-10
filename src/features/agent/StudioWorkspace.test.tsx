@@ -45,6 +45,22 @@ it('saves global and segment voice speed without starting generation',async()=>{
  await waitFor(()=>expect(api.invoke).toHaveBeenCalledWith('test','avatar.configure',expect.objectContaining({voice_speed:1.1,segment_voice_speeds:{p1:1.15}})))
  expect(api.chat).not.toHaveBeenCalled();expect(api.approve).not.toHaveBeenCalled()
 })
+it('switches the voice model in settings and saves the model with its default voice',async()=>{
+ const state=fixture();state.project.input.voice='Wise_Woman';state.project.input.voice_speed=1.1
+ state.voice_models=[
+  {id:'minimax/speech-2.8-hd',name:'MiniMax Speech 2.8 HD',default_voice:'Wise_Woman',supports_speed:true,voices:[{id:'Wise_Woman',name:'睿智女声'}]},
+  {id:'alibaba/qwen3-tts-flash',name:'千问 Qwen3-TTS Flash',default_voice:'Cherry',supports_speed:false,voices:[{id:'Cherry',name:'芊悦'},{id:'Neil',name:'阿闻'}]},
+ ]
+ api.get.mockResolvedValue(state);api.invoke.mockResolvedValue({})
+ open();fireEvent.click(await screen.findByRole('button',{name:'制作设置'}))
+ fireEvent.click(await screen.findByRole('combobox',{name:'配音模型'}))
+ fireEvent.click(await screen.findByRole('option',{name:'千问 Qwen3-TTS Flash'}))
+ await waitFor(()=>expect(screen.getByRole('combobox',{name:'配音音色'})).toHaveValue('芊悦'))
+ expect(screen.getByRole('textbox',{name:'全片配音语速'})).toBeDisabled()
+ fireEvent.click(screen.getByRole('button',{name:'保存设置'}))
+ await waitFor(()=>expect(api.invoke).toHaveBeenCalledWith('test','avatar.configure',expect.objectContaining({voice_model:'alibaba/qwen3-tts-flash',voice:'Cherry',voice_speed:1})))
+ expect(api.chat).not.toHaveBeenCalled()
+})
 it('offers explicit continuation for an old duration failure without automatically starting work',async()=>{
  const state=fixture();state.run!.status='failed';state.run!.stage='F04/p7';state.run!.confirmation=undefined
  state.audio_timing={total:7,completed:7,seconds:93.537249,longest_seconds:19.50025,resume_available:true}

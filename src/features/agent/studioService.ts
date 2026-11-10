@@ -13,7 +13,7 @@ export interface MotionStyle {
 }
 export interface StudioInput {
   revision: number; title: string; topic: string; script: string; direction: string
-  ratio: string; style: string; voice: string; use_avatar: boolean; photo?: string
+  ratio: string; style: string; voice: string; voice_model?: string; use_avatar: boolean; photo?: string
   use_animation?: boolean
 	voice_speed?:number;segment_voice_speeds?:Record<string,number>
   assets: StudioAsset[]
@@ -55,6 +55,7 @@ export interface StudioState {
   proposal:PackageProposal|null;packages:PackageInfo[]
   styles:MotionStyle[]
   voices:{id:string;name:string}[];agent_configured:boolean
+  voice_models?:VoiceModelOption[]
   workflow_plan?:{nodes:string[];material_plan_pending:boolean;stages?:{node:string;title:string;members:string[]}[]}
   agent_activity?:AgentActivity|null
 }
@@ -88,11 +89,12 @@ export const invokePackage=(projectId:string,id:string,input:Record<string,unkno
   studioRequest<Record<string,unknown>>(`/api/v1/agent/packages/${encodeURIComponent(id)}/invoke`,json({projectId,input,requestId}))
 export const getStyleCatalog=()=>studioRequest<{styles:MotionStyle[]}>('/api/v1/avatar-mvp/catalog')
 export interface VoiceOption {id:string;name:string;sample?:string}
-export const getVoiceCatalog=()=>studioRequest<{voices:VoiceOption[];default_voice:string}>('/api/v1/avatar-mvp/catalog')
+export interface VoiceModelOption {id:string;name:string;default_voice:string;supports_speed:boolean;voices:VoiceOption[]}
+export const getVoiceCatalog=()=>studioRequest<{voices:VoiceOption[];default_voice:string;voice_models?:VoiceModelOption[];default_voice_model?:string}>('/api/v1/avatar-mvp/catalog')
 const fusionDirection='沿用人物参考图，由 AI 生成口播视频；制作所选风格的动效特效，按内容将动效与口播人物分层融合，逐帧渲染最终成片。保留人物身份与口播配音，避免动效遮挡人物面部和字幕。'
 // An empty voice lets the server apply the default for the configured TTS model.
-export const createStudio=(topic:string,ratio='9:16',style='',referenceLinks:string[]=[],voice='')=>
-  studioRequest<{id:string}>('/api/v1/avatar-mvp/projects',json({title:topic.slice(0,40)||'未命名项目',topic,ratio,style,direction:fusionDirection,use_avatar:true,use_animation:true,reference_links:referenceLinks,...(voice?{voice}:{})}))
+export const createStudio=(topic:string,ratio='9:16',style='',referenceLinks:string[]=[],voice='',voiceModel='')=>
+  studioRequest<{id:string}>('/api/v1/avatar-mvp/projects',json({title:topic.slice(0,40)||'未命名项目',topic,ratio,style,direction:fusionDirection,use_avatar:true,use_animation:true,reference_links:referenceLinks,...(voice?{voice}:{}),...(voiceModel?{voice_model:voiceModel}:{})}))
 export async function uploadStudioFile(id:string,file:File,kind='photo'){
   const body=new FormData();body.set('file',file);body.set('kind',kind)
   return studioRequest(`/api/v1/avatar-mvp/projects/${id}/assets`,{method:'POST',body})

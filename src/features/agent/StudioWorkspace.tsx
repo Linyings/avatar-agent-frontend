@@ -133,21 +133,31 @@ export default function StudioWorkspace(){
   if(!form)return <Loader size="sm"/>
   const animationEnabled=form.use_animation??(!form.use_avatar||!!run?.needs.some(n=>n.kind==='animation'))
   const change=(key:keyof StudioInput,value:unknown)=>setForm(old=>old?{...old,[key]:value}:old)
+  const speedModel=state!.voice_models?.find(m=>m.id===form.voice_model)??state!.voice_models?.[0]
+  const speedLocked=speedModel?.supports_speed===false
   return <><div className={styles.inspectorTitle}><h2>制作设置</h2><span className={styles.badge}>草稿 v{form.revision}</span></div>
    <div className={styles.inspectorGrid}>
     <TextInput className={styles.field} label="项目名称" value={form.title} onChange={e=>change('title',e.currentTarget.value)}/>
     <Select className={styles.field} label="画面比例" data={['9:16','16:9','1:1']} value={form.ratio} onChange={v=>change('ratio',v)}/>
     <Select className={styles.field} label="动效风格" disabled={!animationEnabled} data={state!.styles.filter(s=>s.published&&!s.legacy).map(s=>({value:s.id,label:s.name}))} value={form.style} onChange={v=>change('style',v)} searchable/>
-    <Select className={styles.field} label="配音音色" data={state!.voices.map(v=>({value:v.id,label:v.name}))} value={form.voice} onChange={v=>change('voice',v)}/>
-    <NumberInput className={styles.field} label="全片配音语速" description="1 为原速，可先试 1.1 倍。修改后需重新制作对应配音、口型和时间轴。" value={form.voice_speed||1} min={.8} max={1.3} step={.05} decimalScale={2} onChange={v=>{if(typeof v==='number')change('voice_speed',v)}}/>
+    {(()=>{
+     const models=state!.voice_models??[]
+     const model=models.find(m=>m.id===form.voice_model)??models[0]
+     const voices=model?model.voices:state!.voices
+     return <>
+      {models.length>1&&<Select className={styles.field} label="配音模型" data={models.map(m=>({value:m.id,label:m.name}))} value={model.id} allowDeselect={false} onChange={v=>{const next=models.find(m=>m.id===v);if(next)setForm(old=>old?{...old,voice_model:next.id,voice:next.default_voice,...(next.supports_speed?{}:{voice_speed:1,segment_voice_speeds:{}})}:old)}}/>}
+      <Select className={styles.field} label="配音音色" data={voices.map(v=>({value:v.id,label:v.name}))} value={form.voice} onChange={v=>change('voice',v)} searchable/>
+     </>
+    })()}
+    <NumberInput className={styles.field} label="全片配音语速" description="1 为原速，可先试 1.1 倍。修改后需重新制作对应配音、口型和时间轴。" value={form.voice_speed||1} disabled={speedLocked} min={.8} max={1.3} step={.05} decimalScale={2} onChange={v=>{if(typeof v==='number')change('voice_speed',v)}}/>
    </div>
-   {!!run?.segments.length&&<details className={styles.panel}><summary>单段语速微调</summary>{run.segments.map(segment=><NumberInput key={segment.id} className={styles.field} mt="sm" label={`${segment.id} · ${segment.chapter||'口播段落'}语速`} placeholder={`跟随全片（${form.voice_speed||1} 倍）`} value={form.segment_voice_speeds?.[segment.id]??''} min={.8} max={1.3} step={.05} decimalScale={2} onChange={v=>{const speeds={...form.segment_voice_speeds};if(typeof v==='number')speeds[segment.id]=v;else delete speeds[segment.id];change('segment_voice_speeds',speeds)}}/>)}</details>}
+   {!!run?.segments.length&&<details className={styles.panel}><summary>单段语速微调</summary>{run.segments.map(segment=><NumberInput key={segment.id} className={styles.field} mt="sm" label={`${segment.id} · ${segment.chapter||'口播段落'}语速`} placeholder={`跟随全片（${form.voice_speed||1} 倍）`} value={form.segment_voice_speeds?.[segment.id]??''} disabled={speedLocked} min={.8} max={1.3} step={.05} decimalScale={2} onChange={v=>{const speeds={...form.segment_voice_speeds};if(typeof v==='number')speeds[segment.id]=v;else delete speeds[segment.id];change('segment_voice_speeds',speeds)}}/>)}</details>}
    <Textarea className={styles.field} mt="md" label="主题与受众" value={form.topic} onChange={e=>change('topic',e.currentTarget.value)} autosize minRows={3}/>
    <Textarea className={styles.field} mt="md" label="完整口播稿（可选）" description="留空时由 Agent 根据主题创作" value={form.script} onChange={e=>change('script',e.currentTarget.value)} autosize minRows={4}/>
    <Textarea className={styles.field} mt="md" label="制作要求" value={form.direction} onChange={e=>change('direction',e.currentTarget.value)} autosize minRows={2}/>
    <Checkbox mt="md" label="使用数字人出镜" checked={form.use_avatar} onChange={e=>change('use_avatar',e.currentTarget.checked)}/>
    <Checkbox mt="md" label="加入动效画面" description="单纯人物口播可关闭，流程中不安排额外动效生成" checked={animationEnabled} onChange={e=>change('use_animation',e.currentTarget.checked)}/>
-   <div className={styles.actionRow}><Button className={styles.primary} loading={busy} onClick={()=>void action(async()=>{const {revision,title,topic,script,direction,style,voice,ratio,use_avatar,use_animation,voice_speed,segment_voice_speeds}=form;await invokePackage(projectId,'avatar.configure',{revision,title,topic,script,direction,style,voice,ratio,use_avatar,use_animation,voice_speed,segment_voice_speeds});const next=await refresh();setForm({...next.project.input})})}>保存设置</Button>
+   <div className={styles.actionRow}><Button className={styles.primary} loading={busy} onClick={()=>void action(async()=>{const {revision,title,topic,script,direction,style,voice,voice_model,ratio,use_avatar,use_animation,voice_speed,segment_voice_speeds}=form;await invokePackage(projectId,'avatar.configure',{revision,title,topic,script,direction,style,voice,...(voice_model?{voice_model}:{}),ratio,use_avatar,use_animation,voice_speed,segment_voice_speeds});const next=await refresh();setForm({...next.project.input})})}>保存设置</Button>
     <FileButton accept="image/*" onChange={file=>void upload(file,'photo')}>{props=><Button {...props} className={styles.ghost} leftSection={<IconPhoto size={14}/>} disabled={busy}>上传人物照片</Button>}</FileButton>
    </div>
   </>

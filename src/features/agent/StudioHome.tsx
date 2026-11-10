@@ -55,7 +55,7 @@ export default function StudioHome(){
   busyRef.current=true;setBusy(true);setError('')
   let current=draft
   try{
-   if(!current){const p=await createStudio(text.trim(),ratio,motionStyle?.id??'',links,voice?.id??'');current={id:p.id};setDraft(current)}
+   if(!current){const p=await createStudio(text.trim(),ratio,motionStyle?.id??'',links,voice?.id??'',voice?.model??'');current={id:p.id};setDraft(current)}
    for(const item of files){
     if(item.uploaded)continue
     const f=item.file;const kind=isTextFile(f)?'text':isVideoFile(f)?'video':(item.id===primaryId?'photo':'image')
@@ -69,7 +69,7 @@ export default function StudioHome(){
  useEffect(()=>{
   if(!user)return
   const saved=sessionStorage.getItem('studio-prompt');if(saved)setText(saved)
-  try{const options=JSON.parse(sessionStorage.getItem('studio-options')??'null');if(options){if(['9:16','16:9','1:1'].includes(options.ratio))setRatio(options.ratio);if(typeof options.motionStyle?.id==='string'&&typeof options.motionStyle?.name==='string')setMotionStyle(options.motionStyle);if(typeof options.voice?.id==='string'&&typeof options.voice?.name==='string')setVoice({id:options.voice.id,name:options.voice.name})}}catch{/* Ignore incomplete saved composer options. */}
+  try{const options=JSON.parse(sessionStorage.getItem('studio-options')??'null');if(options){if(['9:16','16:9','1:1'].includes(options.ratio))setRatio(options.ratio);if(typeof options.motionStyle?.id==='string'&&typeof options.motionStyle?.name==='string')setMotionStyle(options.motionStyle);if(typeof options.voice?.id==='string'&&typeof options.voice?.name==='string')setVoice({id:options.voice.id,name:options.voice.name,...(typeof options.voice.model==='string'?{model:options.voice.model}:{})})}}catch{/* Ignore incomplete saved composer options. */}
   sessionStorage.removeItem('studio-prompt');sessionStorage.removeItem('studio-options')
  },[user])
  return <StudioShell onPackages={()=>setLibrary(true)}><main className={styles.home}>

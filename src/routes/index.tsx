@@ -33,6 +33,7 @@ const SubscriptionPlansPage = lazy(() => import('@/pages/admin/subscriptions/Sub
 const CreditPackagesPage = lazy(() => import('@/pages/admin/subscriptions/CreditPackagesPage'))
 const UserManagementPage = lazy(() => import('@/pages/admin/UserManagementPage'))
 const TtsVoiceManagementPage = lazy(() => import('@/pages/admin/TtsVoiceManagementPage'))
+const ModelLabPage = lazy(() => import('@/features/modelLab/ModelLabPage'))
 
 function RouteFallback() {
   return (
@@ -223,6 +224,13 @@ export default function AppRoutes() {
           <AdminRoute>
             <AppLayout>
               <TtsVoiceManagementPage />
+            </AppLayout>
+          </AdminRoute>
+        } />
+        <Route path="/admin/model-lab" element={
+          <AdminRoute>
+            <AppLayout>
+              <ModelLabPage />
             </AppLayout>
           </AdminRoute>
         } />

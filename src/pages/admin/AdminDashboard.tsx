@@ -118,6 +118,13 @@ const quickActions = [
     color: 'cyan',
   },
   {
+    name: '模型对比实验室',
+    description: '并排对比 RunningHub 音乐、图片、视频模型并设定默认',
+    href: '/admin/model-lab',
+    icon: CpuChipIcon,
+    color: 'grape',
+  },
+  {
     name: '系统日志',
     description: '查看系统运行日志',
     href: '#',
