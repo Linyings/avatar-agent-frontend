@@ -88,7 +88,7 @@ export default function StudioHome(){
      <ActionIcon radius="xl" size={32} className={styles.primary} aria-label="发送创意" disabled={!text.trim()} loading={busy} onClick={()=>void start()}><IconArrowUp size={19}/></ActionIcon>
     </div>
    </div>
-   <div className={styles.hint}>Enter 发送 · Shift + Enter 换行 · 支持多个图片、视频和网页链接</div>
+   <div className={styles.hint}>Enter 发送 · Shift + Enter 换行 · 支持任意格式的多个文件和网页链接</div>
    {error&&<Alert color="red" mt="md" role="alert">{error}{draft&&<><div>已上传素材会保留。可移除失败文件、添加替换文件后重新发送。</div><Button variant="subtle" size="xs" onClick={()=>navigate(`/workspace/${draft.id}`)}>打开已创建的项目</Button></>}</Alert>}
    <div className={styles.categories}><span>人物口播 ＋ 动效融合</span><span>|</span><UnstyledButton disabled={busy||!!draft} onClick={()=>setStyleOpen(true)}>浏览动效风格</UnstyledButton><span>|</span><UnstyledButton onClick={()=>setLibrary(true)}>全部插件 ›</UnstyledButton></div>
    <div className={styles.skills}>{starters.map(s=><UnstyledButton key={s.title} disabled={busy||!!draft} className={styles.skill} onClick={()=>{setText(s.prompt);textarea.current?.focus()}}><span className={styles.skillIcon}><s.icon size={16}/></span>{s.title}</UnstyledButton>)}</div>
