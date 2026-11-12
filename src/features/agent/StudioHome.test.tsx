@@ -37,27 +37,18 @@ it('restores the saved style and ratio after sign-in',async()=>{
  expect(screen.getByRole('button',{name:'动效风格：等轴 2.5D'})).toBeVisible()
  expect(screen.getByRole('textbox',{name:'描述视频创意'})).toHaveValue('登录前的口播主题')
  fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
- await waitFor(()=>expect(api.create).toHaveBeenCalledWith('登录前的口播主题','16:9','mg-isometric',[],'',''))
+ await waitFor(()=>expect(api.create).toHaveBeenCalledWith('登录前的口播主题','16:9','mg-isometric',[]))
  expect(sessionStorage.getItem('studio-options')).toBeNull()
 })
 
-it('creates the project with the chosen voice and restores it after sign-in',async()=>{
- sessionStorage.setItem('studio-options',JSON.stringify({ratio:'9:16',voice:{id:'Calm_Woman',name:'沉稳女声 · Calm Woman',model:'minimax/speech-2.8-hd'}}))
- render(<MantineProvider><MemoryRouter><StudioHome/><Location/></MemoryRouter></MantineProvider>)
- expect(await screen.findByRole('button',{name:'配音音色：沉稳女声 · Calm Woman'})).toBeVisible()
- fireEvent.change(screen.getByRole('textbox',{name:'描述视频创意'}),{target:{value:'选好音色再创建'}})
+it('hides the retained TTS picker and ignores a previously selected TTS voice',async()=>{
+ sessionStorage.setItem('studio-options',JSON.stringify({ratio:'9:16',voice:{id:'Calm_Woman',name:'沉稳女声',model:'minimax/speech-2.8-hd'}}))
+ render(<MantineProvider><MemoryRouter><StudioHome/></MemoryRouter></MantineProvider>)
+ expect(screen.queryByRole('button',{name:/配音音色/})).not.toBeInTheDocument()
+ fireEvent.change(screen.getByRole('textbox',{name:'描述视频创意'}),{target:{value:'原声口播'}})
  fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
- await waitFor(()=>expect(api.create).toHaveBeenCalledWith('选好音色再创建','9:16','',[],'Calm_Woman','minimax/speech-2.8-hd'))
- expect(screen.getByRole('button',{name:'配音音色：沉稳女声 · Calm Woman'})).toBeDisabled()
-})
-
-it('creates the project with a voice from another model',async()=>{
- sessionStorage.setItem('studio-options',JSON.stringify({ratio:'9:16',voice:{id:'dongbeilaotie_speech02',name:'东北老铁',model:'kling-lip-sync/tts'}}))
- render(<MantineProvider><MemoryRouter><StudioHome/><Location/></MemoryRouter></MantineProvider>)
- expect(await screen.findByRole('button',{name:'配音音色：可灵 Kling TTS · 东北老铁'})).toBeVisible()
- fireEvent.change(screen.getByRole('textbox',{name:'描述视频创意'}),{target:{value:'东北话口播'}})
- fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
- await waitFor(()=>expect(api.create).toHaveBeenCalledWith('东北话口播','9:16','',[],'dongbeilaotie_speech02','kling-lip-sync/tts'))
+ await waitFor(()=>expect(api.create).toHaveBeenCalledWith('原声口播','9:16','',[]))
+ expect(api.voices).not.toHaveBeenCalled()
 })
 it('replaces only the failed file and keeps earlier uploads without creating another project',async()=>{
  api.upload.mockReset().mockResolvedValueOnce({}).mockRejectedValueOnce(new Error('上传中断')).mockResolvedValueOnce({})
@@ -94,22 +85,19 @@ it('allows removing an invalid attachment after project creation succeeds but up
  expect(screen.getByRole('button',{name:'移除bad.png'})).toBeEnabled()
 })
 
-it('rejects unsupported images and oversized uploads before saving them',async()=>{
+it('accepts any format but rejects files over the size cap or empty before saving them',async()=>{
  render(<MantineProvider><MemoryRouter><StudioHome/></MemoryRouter></MantineProvider>)
  const add=screen.getByRole('button',{name:'添加参考素材'})
- const invalid=new File(['svg'],'unsupported.svg',{type:'image/svg+xml'})
- fireEvent.drop(add,{dataTransfer:{files:[invalid]}})
- expect(await screen.findByRole('alert')).toHaveTextContent('支持 PNG / JPG 图片')
- expect(screen.queryByRole('button',{name:'移除unsupported.svg'})).not.toBeInTheDocument()
- const largeImage=new File(['image'],'large.png',{type:'image/png'})
- Object.defineProperty(largeImage,'size',{value:8*1024*1024+1})
- fireEvent.drop(add,{dataTransfer:{files:[largeImage]}})
- expect(await screen.findByRole('alert')).toHaveTextContent('单张图片不能超过 8 MB')
+ const svg=new File(['svg'],'diagram.svg',{type:'image/svg+xml'})
+ fireEvent.drop(add,{dataTransfer:{files:[svg]}})
+ expect(screen.getByRole('button',{name:'移除diagram.svg'})).toBeInTheDocument()
  const largeVideo=new File(['video'],'large.mp4',{type:'video/mp4'})
  Object.defineProperty(largeVideo,'size',{value:256*1024*1024+1})
  fireEvent.drop(add,{dataTransfer:{files:[largeVideo]}})
- expect(await screen.findByRole('alert')).toHaveTextContent('单个视频不能超过 256 MB')
- expect(screen.queryByRole('region',{name:'已添加的参考素材'})).not.toBeInTheDocument()
+ expect(await screen.findByRole('alert')).toHaveTextContent('单个文件不能超过 256 MB')
+ fireEvent.drop(add,{dataTransfer:{files:[new File([],'empty.pdf',{type:'application/pdf'})]}})
+ expect(await screen.findByRole('alert')).toHaveTextContent('不能上传空文件')
+ expect(screen.queryByRole('button',{name:'移除large.mp4'})).not.toBeInTheDocument()
  expect(api.create).not.toHaveBeenCalled()
  expect(api.upload).not.toHaveBeenCalled()
 })
@@ -130,7 +118,7 @@ it('adds multiple reference links and rejects unsafe URLs before creating a proj
  fireEvent.change(screen.getByRole('textbox',{name:'描述视频创意'}),{target:{value:'参考这些页面制作视频'}})
  fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
  await waitFor(()=>expect(screen.getByTestId('route')).toHaveTextContent('/workspace/isolated-draft'))
- expect(api.create).toHaveBeenCalledWith('参考这些页面制作视频','9:16','',['https://example.com/a','https://example.com/b'],'','')
+ expect(api.create).toHaveBeenCalledWith('参考这些页面制作视频','9:16','',['https://example.com/a','https://example.com/b'])
 })
 
 it('creates a portrait project with the selected motion style and keeps it on upload retry',async()=>{
@@ -150,8 +138,35 @@ it('creates a portrait project with the selected motion style and keeps it on up
  fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
  await waitFor(()=>expect(screen.getByTestId('route')).toHaveTextContent('/workspace/isolated-draft'))
  expect(api.create).toHaveBeenCalledTimes(1)
- expect(api.create).toHaveBeenCalledWith('只在主题里写口播也保留动效','9:16','mg-isometric',[],'','')
+ expect(api.create).toHaveBeenCalledWith('只在主题里写口播也保留动效','9:16','mg-isometric',[])
  expect(api.upload.mock.calls.map(call=>call[2])).toEqual(['photo','photo'])
+})
+
+it('accepts any file type and routes each to the right upload kind',async()=>{
+ api.upload.mockReset().mockResolvedValue({})
+ render(<MantineProvider><MemoryRouter><StudioHome/><Location/></MemoryRouter></MantineProvider>)
+ const add=screen.getByRole('button',{name:'添加参考素材'})
+ const files=[
+  new File(['p'],'portrait.webp',{type:'image/webp'}),
+  new File(['v'],'clip.mov',{type:'video/quicktime'}),
+  new File(['a'],'voice.m4a',{type:'audio/mp4'}),
+  new File(['t'],'notes.md',{type:'text/markdown'}),
+  new File(['d'],'brief.pdf',{type:'application/pdf'}),
+  new File(['z'],'bundle.zip',{type:'application/zip'}),
+ ]
+ fireEvent.drop(add,{dataTransfer:{files}})
+ expect(screen.queryByText(/支持 PNG/)).toBeNull()
+ fireEvent.change(screen.getByRole('textbox',{name:'描述视频创意'}),{target:{value:'任意文件'}})
+ fireEvent.click(screen.getByRole('button',{name:'发送创意'}))
+ await waitFor(()=>expect(screen.getByTestId('route')).toHaveTextContent('/workspace/isolated-draft'))
+ expect(api.upload.mock.calls.map(call=>[call[1].name,call[2]])).toEqual([['portrait.webp','photo'],['clip.mov','video'],['voice.m4a','audio'],['notes.md','text'],['brief.pdf','file'],['bundle.zip','file']])
+})
+
+it('file pickers do not restrict file types',()=>{
+ const {container}=render(<MantineProvider><MemoryRouter><StudioHome/></MemoryRouter></MantineProvider>)
+ const inputs=[...container.querySelectorAll('input[type="file"]')]
+ expect(inputs.length).toBeGreaterThan(0)
+ for(const input of inputs)expect(input.getAttribute('accept')??'').toBe('')
 })
 
 it('accepts a mixed multi-file drop, keeps one chosen portrait, and avoids duplicate selection',async()=>{

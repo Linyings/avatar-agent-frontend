@@ -7,55 +7,40 @@ interface BrandWordmarkProps {
   tone?: 'adaptive' | 'light' | 'dark'
 }
 
-const wordmarkFont =
-  '"General Sans", Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif'
+// Script face for "Ava", geometric sans for "Speak"; loaded in index.html with
+// system fallbacks so the wordmark never blocks startup.
+export const BRAND_SCRIPT_FONT = '"Pacifico", "Brush Script MT", "Segoe Script", cursive'
+export const BRAND_SANS_FONT = '"Space Grotesk", "General Sans", Inter, "Noto Sans SC", sans-serif'
 
 export default function BrandWordmark({ size = 18, tone = 'adaptive' }: BrandWordmarkProps) {
   const isDarkTone = tone === 'dark'
   const mainColor = tone === 'adaptive' ? 'var(--app-text)' : isDarkTone ? '#ffffff' : '#07152d'
-  const mainHighlight =
-    tone === 'adaptive'
-      ? 'color-mix(in srgb, var(--app-text) 42%, transparent)'
-      : isDarkTone
-        ? 'rgba(255, 255, 255, 0.72)'
-        : 'rgba(196, 91, 45, 0.22)'
-  const accentGradient = 'linear-gradient(150deg, #9be86f 4%, #62d875 42%, #32c67d 100%)'
 
   const baseStyle: CSSProperties = {
     display: 'inline-flex',
     alignItems: 'baseline',
-    fontFamily: wordmarkFont,
     fontSize: size,
-    fontWeight: 750,
-    letterSpacing: 0,
-    lineHeight: 1,
+    lineHeight: 1.15,
     whiteSpace: 'nowrap',
   }
-
-  const textGradientStyle: CSSProperties = {
+  const scriptStyle: CSSProperties = {
+    fontFamily: BRAND_SCRIPT_FONT,
+    fontWeight: 400,
+    fontSize: size * 1.12,
     color: 'transparent',
-    backgroundImage: `linear-gradient(180deg, ${mainHighlight} 0%, ${mainColor} 38%, ${mainColor} 100%)`,
+    backgroundImage: 'linear-gradient(120deg, #fc8b73 0%, #d77bd8 55%, #8f8cff 100%)',
     backgroundClip: 'text',
     WebkitBackgroundClip: 'text',
-    textShadow: isDarkTone ? '0 8px 24px rgba(0, 0, 0, 0.18)' : '0 10px 22px rgba(7, 21, 45, 0.1)',
+    paddingRight: size * 0.06,
   }
-
-  const accentStyle: CSSProperties = {
-    color: 'transparent',
-    backgroundImage: accentGradient,
-    backgroundClip: 'text',
-    WebkitBackgroundClip: 'text',
-    textShadow: '0 8px 20px rgba(196, 91, 45, 0.22)',
-  }
+  const sansStyle: CSSProperties = { fontFamily: BRAND_SANS_FONT, fontWeight: 700, letterSpacing: '-0.02em', color: mainColor }
+  const tldStyle: CSSProperties = { fontFamily: BRAND_SANS_FONT, fontWeight: 400, color: '#90daff', marginLeft: size * 0.02 }
 
   return (
     <Box component="span" aria-label={PRODUCT_NAME} style={baseStyle}>
-      <Box component="span" aria-hidden style={textGradientStyle}>
-        数字人
-      </Box>
-      <Box component="span" aria-hidden style={{ ...accentStyle, marginLeft: size * 0.04 }}>
-        口播
-      </Box>
+      <Box component="span" aria-hidden style={scriptStyle}>Ava</Box>
+      <Box component="span" aria-hidden style={sansStyle}>Speak</Box>
+      <Box component="span" aria-hidden style={tldStyle}>.ai</Box>
     </Box>
   )
 }

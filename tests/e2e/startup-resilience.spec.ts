@@ -13,7 +13,7 @@ for (const path of ['/avatar-mvp%60', '/missing-page']) {
     await expect(page.getByRole('heading', { name: '页面不存在' })).toBeVisible()
     await page.getByRole('link', { name: '返回新版首页' }).click()
     await expect(page).toHaveURL(/\/$/)
-    await expect(page.getByRole('heading', { name: 'Flova 1.5 你的专属AI视频Agent' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'AvaSpeak.ai 你的专属AI视频Agent' })).toBeVisible()
     expect(errors).toEqual([])
   })
 }
@@ -44,7 +44,7 @@ for (const path of ['/avatar-mvp', '/avatar-mvp?task_id=old-task&legacy=1']) {
     await page.route('https://fonts.googleapis.com/**', route => route.abort())
     await page.goto(path, { waitUntil: 'domcontentloaded' })
     await expect(page).toHaveURL(/\/$/)
-    await expect(page.getByRole('heading', { name: 'Flova 1.5 你的专属AI视频Agent' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'AvaSpeak.ai 你的专属AI视频Agent' })).toBeVisible()
     await expect(page.getByRole('heading', { name: '从内容到完整视频' })).toHaveCount(0)
   })
 }

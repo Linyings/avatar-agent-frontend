@@ -10,7 +10,7 @@ const messages:ChatLine[]=[
 ]
 function fixture():StudioState{
  const input={revision:1,title:'项目',topic:'主题',script:'文案',direction:'',ratio:'9:16',style:'',voice:'',use_avatar:true,assets:[]}
- return {project:{id:'project',name:'项目',input},run:{id:'run',status:'running',stage:'F12',input,script:'文案',segments:[],shots:[],needs:[],materials:[],artifacts:[],steps:[],duration:0,pause_requested:false,updated_at:'2026-11-07T08:01:00Z'},proposal:null,packages:[],styles:[],voices:[],agent_configured:true}
+ return {project:{id:'project',name:'项目',input},run:{id:'run',status:'running',stage:'F12',input,script:'文案',segments:[],shots:[],needs:[],materials:[],artifacts:[],steps:[],duration:0,pause_requested:false,updated_at:'2026-11-07T08:01:00Z'},proposal:null,packages:[],styles:[],agent_configured:true}
 }
 const order=(items:ReturnType<typeof useChatTimeline>)=>items.map(item=>item.kind==='notice'?'notice':item.id)
 it('moves the current card only for a new workflow state, not for polling or unrelated Agent activity',()=>{

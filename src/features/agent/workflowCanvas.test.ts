@@ -5,7 +5,7 @@ import {canvasEdges,canvasPresentation,layoutWorkflow,loadCanvasLayout,saveCanva
 const pkg=(node:string,dependencies:string[]=[]):PackageInfo=>({id:'pkg-'+node,node,title:node,dependencies,version:'1',tool:node,entrypoint:node,description:'说明',outputs:[],ready:true,reason:''})
 function fixture():StudioState{
  const input={revision:1,title:'示例',topic:'主题文案',script:'草稿文案',direction:'',ratio:'9:16',style:'',voice:'',use_avatar:true,assets:[{id:'photo',name:'人物.png',kind:'photo',duration:0},{id:'excluded',name:'隐藏.png',kind:'image',duration:0,excluded:true}]}
- return {project:{id:'project-a',name:'示例',input},run:{id:'run-a',status:'running',stage:'F04/p2',input,script:'最终文案',pause_requested:false,segments:[{id:'p1',chapter:'开场',text:'第一段',audio:'private/path.wav',start:0,duration:2},{id:'p2',chapter:'正文',text:'第二段',start:2,duration:3}],shots:[],needs:[],materials:[],artifacts:[],duration:5,steps:[{id:'F04/p1',status:'succeeded',seconds:2},{id:'F04/p2',status:'running',seconds:0}]},proposal:null,packages:[],styles:[],voices:[],agent_configured:true}
+ return {project:{id:'project-a',name:'示例',input},run:{id:'run-a',status:'running',stage:'F04/p2',input,script:'最终文案',pause_requested:false,segments:[{id:'p1',chapter:'开场',text:'第一段',audio:'private/path.wav',start:0,duration:2},{id:'p2',chapter:'正文',text:'第二段',start:2,duration:3}],shots:[],needs:[],materials:[],artifacts:[],duration:5,steps:[{id:'F04/p1',status:'succeeded',seconds:2},{id:'F04/p2',status:'running',seconds:0}]},proposal:null,packages:[],styles:[],agent_configured:true}
 }
 describe('workflow graph',()=>{
  it('shows assembly batch progress and the current phase after materials are ready',()=>{

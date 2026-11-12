@@ -1,4 +1,4 @@
-export const PRODUCT_NAME = '数字人口播'
+export const PRODUCT_NAME = 'AvaSpeak.ai'
 
 export const PRODUCT_TAGLINE = 'AI 数字人口播视频平台'
 

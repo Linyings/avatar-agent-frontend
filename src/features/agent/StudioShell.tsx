@@ -11,7 +11,7 @@ export function StudioShell({children,onPackages}:{children:ReactNode;onPackages
  const [help,setHelp]=useState(false)
  return <div className={styles.shell}>
   <aside className={styles.sidebar}>
-   <Link to="/" className={styles.brand}>Flova<em>.ai</em><i className={styles.brandDot}/></Link>
+   <Link to="/" className={styles.brand} aria-label="AvaSpeak.ai 首页"><span className={styles.brandScript}>Ava</span>Speak<em>.ai</em><i className={styles.brandDot}/></Link>
    <nav className={styles.nav} aria-label="主导航">
     <Link to="/" className={styles.navItem} data-active={location.pathname==='/'}><IconHome size={18}/><span>首页</span></Link>
     <Link to="/projects" className={styles.navItem} data-active={location.pathname!=='/'}><IconFolder size={18}/><span>项目</span></Link>
@@ -29,7 +29,7 @@ export function StudioShell({children,onPackages}:{children:ReactNode;onPackages
    </div>
   </aside>
   <div className={styles.body}><header className={styles.topbar}>
-   <div className={styles.topLabel}><i className={styles.dot}/><span>Flova Studio AI</span><span>/</span><span>你的创意工作空间</span></div>
+   <div className={styles.topLabel}><i className={styles.dot}/><span>AvaSpeak Studio</span><span>/</span><span>你的创意工作空间</span></div>
    <div className={styles.headerActions}><span className={styles.subtle}>数字人口播 · 动效制作</span>
     {user?<Link to="/profile" aria-label="账户"><Avatar size={30} color="cyan" radius="xl"><IconUser size={16}/></Avatar></Link>:<Button component={Link} to="/login" size="compact-sm" className={styles.primary}>登录 / 注册</Button>}
    </div>

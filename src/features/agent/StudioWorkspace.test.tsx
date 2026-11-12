@@ -10,15 +10,54 @@ const api=vi.hoisted(()=>({get:vi.fn(),history:vi.fn(),invoke:vi.fn(),approve:vi
 vi.mock('./studioService',async()=>({...await vi.importActual('./studioService'),getStudio:api.get,invokePackage:api.invoke,approveGate:api.approve}))
 vi.mock('./agentService',()=>({getHistory:api.history,sendChat:api.chat,stopAgent:vi.fn(),subscribeAgentStream:api.subscribe}))
 vi.mock('./StudioShell',()=>({StudioShell:({children}:{children:React.ReactNode})=><div>{children}</div>,PackageLibrary:()=>null,ProtectedMedia:({kind,alt}:{kind:string;alt?:string})=><div data-testid={`media-${kind}`}>{alt}</div>}))
-vi.mock('./WorkflowCanvasView',()=>({default:({onOpen}:{onOpen:(id:string)=>void})=> <div data-testid="canvas">画布<button onClick={()=>onOpen('delivery')}>打开交付详情</button><button onClick={()=>onOpen('preview')}>打开预览详情</button></div>}))
+vi.mock('./WorkflowCanvasView',()=>({default:({onOpen}:{onOpen:(id:string)=>void})=> <div data-testid="canvas">画布<button onClick={()=>onOpen('delivery')}>打开交付详情</button><button onClick={()=>onOpen('preview')}>打开预览详情</button><button onClick={()=>onOpen('native:p1')}>打开原声人物视频</button><button onClick={()=>onOpen('material:a1')}>从汇总打开人物视频</button></div>}))
 vi.mock('@/components/ui',()=>({MarkdownLite:({content}:{content:string})=><p>{content}</p>}))
 function fixture():StudioState{
  const input={revision:1,title:'测试项目',topic:'口播',script:'需要审核的稿件。',direction:'',ratio:'9:16',style:'',voice:'',use_avatar:true,assets:[]}
- return {project:{id:'test',name:'测试项目',input},run:{id:'run',status:'awaiting_confirmation',stage:'F03',confirmation:'script',confirmation_version:'v1',input,script:input.script,steps:[],segments:[{id:'p1',text:input.script,chapter:'开场',start:0,duration:0}],needs:[],materials:[],shots:[],artifacts:[],duration:0,pause_requested:false},packages:[],proposal:null,styles:[],voices:[],agent_configured:true}
+ return {project:{id:'test',name:'测试项目',input},run:{id:'run',status:'awaiting_confirmation',stage:'F03',confirmation:'script',confirmation_version:'v1',input,script:input.script,steps:[],segments:[{id:'p1',text:input.script,chapter:'开场',start:0,duration:0}],needs:[],materials:[],shots:[],artifacts:[],duration:0,pause_requested:false},packages:[],proposal:null,styles:[],agent_configured:true}
 }
 function open(){return render(<MantineProvider><MemoryRouter initialEntries={['/workspace/test']}><Routes><Route path="/workspace/:projectId" element={<StudioWorkspace/>}/></Routes></MemoryRouter></MantineProvider>)}
 beforeEach(()=>{vi.resetAllMocks();HTMLElement.prototype.scrollIntoView=vi.fn();Object.defineProperty(document,'fonts',{configurable:true,value:{addEventListener:vi.fn(),removeEventListener:vi.fn()}});api.history.mockResolvedValue({messages:[]});api.get.mockResolvedValue(fixture())})
 afterEach(cleanup)
+it('opens the native video before planning and keeps that selection as the material becomes editable without submitting jobs',async()=>{
+ const state=fixture(),run=state.run!
+ run.input.speech_mode='native-video';run.version='avatar-workflow/3.0';run.status='running';run.confirmation=undefined;run.stage='F05'
+ run.segments[0].native_video='p1/native.mp4';run.segments[0].audio='p1/audio.wav';run.segments[0].duration=5
+ run.artifacts=[{id:'native-p1',name:'人物原声.mp4',media_type:'video/mp4'}]
+ run.steps=[{id:'F04/p1',status:'succeeded',seconds:5},{id:'F05',status:'running',seconds:0}]
+ state.workflow_plan={nodes:['F03','F04','F05','F06','F10'],material_plan_pending:true,stages:[{node:'F03',title:'文案',members:['F03']},{node:'F04',title:'原声',members:['F04']},{node:'F10',title:'镜头与专用动效制作',members:['F05','F06','F10']}]}
+ api.get.mockResolvedValue(state);open()
+ fireEvent.click(await screen.findByRole('button',{name:'打开原声人物视频'}))
+ let detail=screen.getByLabelText('步骤详情')
+ expect(within(detail).getByTestId('media-video')).toBeVisible()
+ expect(within(detail).queryByTestId('media-audio')).not.toBeInTheDocument()
+ expect(within(detail).queryByRole('button',{name:'执行到此步骤'})).not.toBeInTheDocument()
+ const planned=structuredClone(state)
+ planned.run!.needs=[{id:'a1',kind:'avatar',segment_id:'p1',content:'自然讲解',prompt:'自然讲解'}]
+ api.get.mockResolvedValue(planned)
+ const listener=api.subscribe.mock.calls[0][1] as (e:AgentStreamEvent)=>void
+ await act(async()=>{listener({type:'workflow_state'} as AgentStreamEvent)})
+ expect(await screen.findByRole('button',{name:'保存提示词'})).toBeVisible()
+ fireEvent.click(screen.getByRole('button',{name:'返回画布'}))
+ fireEvent.click(screen.getByRole('button',{name:'从汇总打开人物视频'}))
+ detail=screen.getByLabelText('步骤详情')
+ expect(within(detail).getByTestId('media-video')).toBeVisible()
+ expect(api.invoke).not.toHaveBeenCalled();expect(api.chat).not.toHaveBeenCalled();expect(api.approve).not.toHaveBeenCalled()
+})
+it('uses an optional audio reference instead of TTS controls in native mode',async()=>{
+ const state=fixture();state.project.input.speech_mode='native-video'
+ state.project.input.assets=[{id:'voice-ref',kind:'audio',name:'参考声音.wav',duration:5}]
+ api.get.mockResolvedValue(state);api.invoke.mockResolvedValue({})
+ open();fireEvent.click(await screen.findByRole('button',{name:'制作设置'}))
+ expect(screen.queryByRole('combobox',{name:'配音音色'})).not.toBeInTheDocument()
+ expect(screen.queryByRole('textbox',{name:'全片配音语速'})).not.toBeInTheDocument()
+ expect(screen.getByRole('button',{name:'上传参考音色（较长录音自动截取 20 秒）'})).toBeVisible()
+ fireEvent.click(screen.getByRole('combobox',{name:'参考音色（可选）'}))
+ fireEvent.click(await screen.findByRole('option',{name:'参考声音.wav'}))
+ fireEvent.click(screen.getByRole('button',{name:'保存设置'}))
+ await waitFor(()=>expect(api.invoke).toHaveBeenCalledWith('test','avatar.configure',expect.objectContaining({voice_reference:'voice-ref'})))
+ expect(api.chat).not.toHaveBeenCalled()
+})
 it('hands exhausted retries to Agent diagnosis without submitting another production attempt',async()=>{
  const state=fixture();state.run!.status='failed';state.run!.confirmation=undefined;state.run!.stage='F07/m1';state.run!.error_step_id='F07/m1/scene-2';state.run!.error='场景2关键内容未完整展示';
  state.run!.steps=[{id:'F07/m1/scene-2',status:'failed',seconds:3,error:state.run!.error,retry:{last_error:state.run!.error,strategy:'调整入场时间',automatic_retries:3,exhausted:true}}];
@@ -34,33 +73,6 @@ it('hands exhausted retries to Agent diagnosis without submitting another produc
  expect(api.chat.mock.calls[0][0].message).toContain('跳过');
  expect(api.invoke).not.toHaveBeenCalled();expect(api.approve).not.toHaveBeenCalled();
 });
-it('saves global and segment voice speed without starting generation',async()=>{
- api.invoke.mockResolvedValue({})
- open();fireEvent.click(await screen.findByRole('button',{name:'制作设置'}))
- fireEvent.change(await screen.findByRole('textbox',{name:'全片配音语速'}),{target:{value:'1.1'}})
- fireEvent.click(screen.getByText('单段语速微调'))
- fireEvent.change(screen.getByRole('textbox',{name:'p1 · 开场语速'}),{target:{value:'1.15'}})
- expect(api.invoke).not.toHaveBeenCalled()
- fireEvent.click(screen.getByRole('button',{name:'保存设置'}))
- await waitFor(()=>expect(api.invoke).toHaveBeenCalledWith('test','avatar.configure',expect.objectContaining({voice_speed:1.1,segment_voice_speeds:{p1:1.15}})))
- expect(api.chat).not.toHaveBeenCalled();expect(api.approve).not.toHaveBeenCalled()
-})
-it('switches the voice model in settings and saves the model with its default voice',async()=>{
- const state=fixture();state.project.input.voice='Wise_Woman';state.project.input.voice_speed=1.1
- state.voice_models=[
-  {id:'minimax/speech-2.8-hd',name:'MiniMax Speech 2.8 HD',default_voice:'Wise_Woman',supports_speed:true,voices:[{id:'Wise_Woman',name:'睿智女声'}]},
-  {id:'alibaba/qwen3-tts-flash',name:'千问 Qwen3-TTS Flash',default_voice:'Cherry',supports_speed:false,voices:[{id:'Cherry',name:'芊悦'},{id:'Neil',name:'阿闻'}]},
- ]
- api.get.mockResolvedValue(state);api.invoke.mockResolvedValue({})
- open();fireEvent.click(await screen.findByRole('button',{name:'制作设置'}))
- fireEvent.click(await screen.findByRole('combobox',{name:'配音模型'}))
- fireEvent.click(await screen.findByRole('option',{name:'千问 Qwen3-TTS Flash'}))
- await waitFor(()=>expect(screen.getByRole('combobox',{name:'配音音色'})).toHaveValue('芊悦'))
- expect(screen.getByRole('textbox',{name:'全片配音语速'})).toBeDisabled()
- fireEvent.click(screen.getByRole('button',{name:'保存设置'}))
- await waitFor(()=>expect(api.invoke).toHaveBeenCalledWith('test','avatar.configure',expect.objectContaining({voice_model:'alibaba/qwen3-tts-flash',voice:'Cherry',voice_speed:1})))
- expect(api.chat).not.toHaveBeenCalled()
-})
 it('offers explicit continuation for an old duration failure without automatically starting work',async()=>{
  const state=fixture();state.run!.status='failed';state.run!.stage='F04/p7';state.run!.confirmation=undefined
  state.audio_timing={total:7,completed:7,seconds:93.537249,longest_seconds:19.50025,resume_available:true}

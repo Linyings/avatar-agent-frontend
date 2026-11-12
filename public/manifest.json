@@ -1,6 +1,6 @@
 {
-  "name": "数字人口播 - AI 数字人口播视频平台",
-  "short_name": "数字人口播",
+  "name": "AvaSpeak.ai - AI 数字人口播视频平台",
+  "short_name": "AvaSpeak.ai",
   "description": "上传人物照片和中文口播稿，生成配音、多角度口播画面、字级字幕和可下载的竖屏视频。",
   "start_url": "/",
   "display": "standalone",

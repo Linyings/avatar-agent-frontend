@@ -7,7 +7,7 @@ vi.mock('./StudioShell',()=>({ProtectedMedia:({url}:{url:string})=><audio data-t
 afterEach(cleanup)
 function fixture():StudioState{
  const input={revision:1,title:'',topic:'口播',script:'第一句。第二句。',direction:'',ratio:'9:16',style:'',voice:'',use_avatar:true,assets:[]}
- return {project:{id:'test',name:'test',input},run:{id:'run',status:'awaiting_confirmation',stage:'F03',confirmation:'script',confirmation_version:'version-1',input,script:input.script,steps:[],segments:[{id:'p1',chapter:'开场',text:'第一句。',duration:0,start:0},{id:'p2',chapter:'正文',text:'第二句。',duration:0,start:0}],needs:[],materials:[],shots:[],artifacts:[],duration:0,pause_requested:false},proposal:null,packages:[],styles:[],voices:[],agent_configured:true}
+ return {project:{id:'test',name:'test',input},run:{id:'run',status:'awaiting_confirmation',stage:'F03',confirmation:'script',confirmation_version:'version-1',input,script:input.script,steps:[],segments:[{id:'p1',chapter:'开场',text:'第一句。',duration:0,start:0},{id:'p2',chapter:'正文',text:'第二句。',duration:0,start:0}],needs:[],materials:[],shots:[],artifacts:[],duration:0,pause_requested:false},proposal:null,packages:[],styles:[],agent_configured:true}
 }
 function ui(state:StudioState,primary=vi.fn(),syncError=''){
  return <MantineProvider><ExecutionStatus state={state} busy={false} onPrimary={primary} onCurrent={()=>{}} syncError={syncError}/></MantineProvider>

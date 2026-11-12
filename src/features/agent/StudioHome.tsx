@@ -7,9 +7,8 @@ import {ProjectService} from '@/features/projects'
 import type {Project} from '@/features/projects/types/project'
 import {createStudio,requestID,uploadStudioFile} from './studioService'
 import {StudioShell,PackageLibrary,ProjectArtwork,MoreLink} from './StudioShell'
-import HomeAttachments,{fileIdentity,isVideoFile,isTextFile,isSupportedImage,type HomeFile} from './HomeAttachments'
+import HomeAttachments,{fileIdentity,isSupportedImage,uploadKindOf,type HomeFile} from './HomeAttachments'
 import MotionStylePicker,{type MotionStyleSelection} from './MotionStylePicker'
-import VoicePicker,{type VoiceSelection} from './VoicePicker'
 import styles from './Studio.module.css'
 
 const starters=[
@@ -23,7 +22,6 @@ export default function StudioHome(){
  const {user}=useAuth();const navigate=useNavigate();const [params,setParams]=useSearchParams()
  const [text,setText]=useState('');const [ratio,setRatio]=useState('9:16')
  const [motionStyle,setMotionStyle]=useState<MotionStyleSelection|null>(null);const [styleOpen,setStyleOpen]=useState(false)
- const [voice,setVoice]=useState<VoiceSelection|null>(null)
  const [files,setFiles]=useState<HomeFile[]>([]);const [projects,setProjects]=useState<Project[]>([])
  const [links,setLinks]=useState<string[]>([]);const [pickerOpen,setPickerOpen]=useState(false)
  const [portraitId,setPortraitId]=useState<string|null>(null);const [uploadingId,setUploadingId]=useState<string|null>(null)
@@ -40,10 +38,9 @@ export default function StudioHome(){
  }
  function addFiles(next:File[]){
   if(busyRef.current)return
-  if(next.some(f=>!isVideoFile(f)&&!isSupportedImage(f)&&!isTextFile(f))){setError('支持 PNG / JPG 图片、MP4 / MOV 等视频，以及 TXT / Markdown 参考文案');return}
-  if(next.some(f=>isTextFile(f)&&f.size>1024*1024)){setError('参考文案不能超过 1 MB');return}
-  if(next.some(f=>isSupportedImage(f)&&f.size>8*1024*1024)){setError('单张图片不能超过 8 MB');return}
-  if(next.some(f=>isVideoFile(f)&&f.size>256*1024*1024)){setError('单个视频不能超过 256 MB');return}
+  // Any format is accepted; only the server's single-file size cap applies.
+  if(next.some(f=>f.size>256*1024*1024)){setError('单个文件不能超过 256 MB');return}
+  if(next.some(f=>f.size===0)){setError('不能上传空文件');return}
   setError('');setFiles(old=>{const seen=new Set(old.map(f=>fileIdentity(f.file)));return [...old,...next.filter(file=>{const id=fileIdentity(file);if(seen.has(id))return false;seen.add(id);return true}).map(file=>({id:requestID(),file,uploaded:false}))]})
  }
  useEffect(()=>{if(!draft&&(params.get('panel')==='styles'||params.get('mode')==='animation'))setStyleOpen(true)},[params,draft])
@@ -51,14 +48,14 @@ export default function StudioHome(){
  useEffect(()=>{let live=true;if(user)ProjectService.getProjects({limit:4,offset:0,sort_by:'updated_at',sort_order:'desc'}).then(r=>{if(live)setProjects(r.projects??[])}).catch(e=>{if(live)setError(e.message)});return()=>{live=false}},[user])
  async function start(){
   if(!text.trim()||busyRef.current)return
-  if(!user){sessionStorage.setItem('studio-prompt',text);sessionStorage.setItem('studio-options',JSON.stringify({ratio,motionStyle,voice}));navigate('/login');return}
+  if(!user){sessionStorage.setItem('studio-prompt',text);sessionStorage.setItem('studio-options',JSON.stringify({ratio,motionStyle}));navigate('/login');return}
   busyRef.current=true;setBusy(true);setError('')
   let current=draft
   try{
-   if(!current){const p=await createStudio(text.trim(),ratio,motionStyle?.id??'',links,voice?.id??'',voice?.model??'');current={id:p.id};setDraft(current)}
+   if(!current){const p=await createStudio(text.trim(),ratio,motionStyle?.id??'',links);current={id:p.id};setDraft(current)}
    for(const item of files){
     if(item.uploaded)continue
-    const f=item.file;const kind=isTextFile(f)?'text':isVideoFile(f)?'video':(item.id===primaryId?'photo':'image')
+    const f=item.file;const kind=uploadKindOf(f,item.id===primaryId)
     setUploadingId(item.id);setFiles(old=>old.map(saved=>saved.id===item.id?{...saved,error:false}:saved))
     try{await uploadStudioFile(current.id,f,kind)}catch(e){setFiles(old=>old.map(saved=>saved.id===item.id?{...saved,error:true}:saved));throw e}
     setFiles(old=>old.map(saved=>saved.id===item.id?{...saved,uploaded:true,kind,error:false}:saved))
@@ -69,17 +66,17 @@ export default function StudioHome(){
  useEffect(()=>{
   if(!user)return
   const saved=sessionStorage.getItem('studio-prompt');if(saved)setText(saved)
-  try{const options=JSON.parse(sessionStorage.getItem('studio-options')??'null');if(options){if(['9:16','16:9','1:1'].includes(options.ratio))setRatio(options.ratio);if(typeof options.motionStyle?.id==='string'&&typeof options.motionStyle?.name==='string')setMotionStyle(options.motionStyle);if(typeof options.voice?.id==='string'&&typeof options.voice?.name==='string')setVoice({id:options.voice.id,name:options.voice.name,...(typeof options.voice.model==='string'?{model:options.voice.model}:{})})}}catch{/* Ignore incomplete saved composer options. */}
+  try{const options=JSON.parse(sessionStorage.getItem('studio-options')??'null');if(options){if(['9:16','16:9','1:1'].includes(options.ratio))setRatio(options.ratio);if(typeof options.motionStyle?.id==='string'&&typeof options.motionStyle?.name==='string')setMotionStyle(options.motionStyle)}}catch{/* Ignore incomplete saved composer options. */}
   sessionStorage.removeItem('studio-prompt');sessionStorage.removeItem('studio-options')
  },[user])
  return <StudioShell onPackages={()=>setLibrary(true)}><main className={styles.home}>
   <section className={styles.hero}>
    <div className={styles.eyebrow}>IDEAS INTO MOTION</div>
-   <h1 className={styles.heroTitle}>Flova<em>1.5</em>你的专属AI视频Agent</h1>
+   <h1 className={styles.heroTitle} aria-label="AvaSpeak.ai 你的专属AI视频Agent"><span className={styles.heroBrand}><span className={styles.brandScript}>Ava</span>Speak<em>.ai</em></span>你的专属AI视频Agent</h1>
    <p className={styles.heroSubtitle}>AI 人物口播 × 风格动效，让创意融合成片</p>
    <div className={styles.composer}>
     <HomeAttachments files={files} links={links} primaryId={primaryId} uploadingId={uploadingId} busy={busy} locked={!!draft} avatar opened={pickerOpen} onOpened={setPickerOpen} onFiles={addFiles} onLinks={setLinks} onRemove={id=>setFiles(old=>old.filter(f=>f.id!==id))} onPrimary={setPortraitId}>
-     <Textarea ref={textarea} aria-label="描述视频创意" placeholder="描述你想制作的视频，也可以添加人物图片、参考视频或网页链接…" value={text} onChange={e=>setText(e.currentTarget.value)} disabled={busy||!!draft} minRows={7} maxRows={10} autosize classNames={{input:styles.promptInput}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();void start()}}}/>
+     <Textarea ref={textarea} aria-label="描述视频创意" placeholder="描述你想制作的视频，也可以添加人物图片、参考视频、音频、文档或网页链接…" value={text} onChange={e=>setText(e.currentTarget.value)} disabled={busy||!!draft} minRows={7} maxRows={10} autosize classNames={{input:styles.promptInput}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();void start()}}}/>
     </HomeAttachments>
     <div className={styles.composerFoot}>
      <div className={styles.composerTools}>
@@ -87,7 +84,6 @@ export default function StudioHome(){
       <ActionIcon variant="subtle" className={styles.iconButton} aria-label="选择插件" onClick={()=>setLibrary(true)}><IconBox size={18}/></ActionIcon>
       <Button variant="default" size="compact-xs" leftSection={<IconSparkles size={14}/>} className={styles.motionStyleButton} aria-label={`动效风格：${motionStyle?.name??'默认风格'}`} aria-haspopup="dialog" aria-expanded={styleOpen} disabled={busy||!!draft} onClick={()=>setStyleOpen(true)}>风格 · {motionStyle?.name??'默认'}</Button>
       <Select aria-label="画幅" value={ratio} onChange={v=>setRatio(v??'9:16')} data={['9:16','16:9','1:1']} allowDeselect={false} w={78} size="xs" classNames={{input:styles.selectInput}} disabled={busy||!!draft}/>
-       <VoicePicker value={voice} onChange={setVoice} disabled={busy||!!draft}/>
      </div>
      <ActionIcon radius="xl" size={32} className={styles.primary} aria-label="发送创意" disabled={!text.trim()} loading={busy} onClick={()=>void start()}><IconArrowUp size={19}/></ActionIcon>
     </div>

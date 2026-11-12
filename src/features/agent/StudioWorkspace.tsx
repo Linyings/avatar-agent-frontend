@@ -1,6 +1,6 @@
 import {useCallback,useEffect,useRef,useState} from 'react'
 import {Link,useParams,useSearchParams} from 'react-router-dom'
-import {ActionIcon,Alert,Button,Checkbox,FileButton,Loader,NumberInput,Select,Textarea,TextInput,UnstyledButton} from '@mantine/core'
+import {ActionIcon,Alert,Button,Checkbox,FileButton,Loader,Select,Textarea,TextInput,UnstyledButton} from '@mantine/core'
 import {IconArrowUp,IconBox,IconChevronRight,IconDownload,IconLayoutBoard,IconPhoto,IconPlayerPlay,IconPlayerStop,IconPlus,IconRobot,IconSchema,IconSparkles,IconTimeline,IconX} from '@tabler/icons-react'
 import {MarkdownLite} from '@/components/ui'
 import {getHistory,sendChat,stopAgent,subscribeAgentStream,type ToolEvent} from './agentService'
@@ -13,9 +13,10 @@ import ExecutionStatus from './ExecutionStatus'
 import AgentProcess from './AgentProcess'
 import ScriptEditor from './ScriptEditor'
 import MaterialNodeDetail from './MaterialNodeDetail'
+import NativeVideoDetail from './NativeVideoDetail'
 import QualityReview from './QualityReview'
 import WorkspaceNotice from './WorkspaceNotice'
-import {isTextFile,isVideoFile} from './HomeAttachments'
+import {uploadKindOf} from './HomeAttachments'
 import {useChatTimeline,type ChatLine} from './useChatTimeline'
 import styles from './Studio.module.css'
 
@@ -99,12 +100,17 @@ export default function StudioWorkspace(){
  }
  function runPackage(p:PackageInfo){void action(()=>invokePackage(projectId,p.id))}
  function control(command:string){void action(()=>invokePackage(projectId,'avatar.control',{action:command}))}
- async function upload(file:File|null,kind:string){if(!file)return;await action(async()=>{if(!state?.project.input.revision)await invokePackage(projectId,'avatar.configure',{});await uploadStudioFile(projectId,file,kind)})}
+ async function upload(file:File|null,kind:string){if(!file)return;await action(async()=>{
+  if(!state?.project.input.revision)await invokePackage(projectId,'avatar.configure',{})
+  await uploadStudioFile(projectId,file,kind)
+  const next=await refresh(),latest=next.project.input
+  setForm(old=>old?{...old,revision:latest.revision,assets:latest.assets,photo:latest.photo,...(kind==='audio'?{voice_reference:latest.voice_reference}:{})}:old)
+ })}
  function openSettings(){setForm(state?{...state.project.input}:null);setTab('settings');setSelected(null)}
  const run=state?.run
  const editScript=useCallback(()=>{if(state?.run?.script)setEditingScript(structuredClone(state.run))},[state?.run])
  const nodes=state?workflowPackages(state):[]
- const selectedPackage=nodes.find(p=>p.id===selected)??state?.packages.find(p=>p.id===selected)
+ const selectedPackage=nodes.find(p=>p.id===selected||(p.materialId&&selected===`material:${p.materialId}`))??state?.packages.find(p=>p.id===selected)
  const proposal=state?.proposal&&!state.proposal.applied?state.proposal:null
  const active=run?.status==='running'||run?.status==='stopping'
  const agentBusy=sending||state?.agent_activity?.status==='running'
@@ -133,32 +139,20 @@ export default function StudioWorkspace(){
   if(!form)return <Loader size="sm"/>
   const animationEnabled=form.use_animation??(!form.use_avatar||!!run?.needs.some(n=>n.kind==='animation'))
   const change=(key:keyof StudioInput,value:unknown)=>setForm(old=>old?{...old,[key]:value}:old)
-  const speedModel=state!.voice_models?.find(m=>m.id===form.voice_model)??state!.voice_models?.[0]
-  const speedLocked=speedModel?.supports_speed===false
   return <><div className={styles.inspectorTitle}><h2>制作设置</h2><span className={styles.badge}>草稿 v{form.revision}</span></div>
    <div className={styles.inspectorGrid}>
     <TextInput className={styles.field} label="项目名称" value={form.title} onChange={e=>change('title',e.currentTarget.value)}/>
     <Select className={styles.field} label="画面比例" data={['9:16','16:9','1:1']} value={form.ratio} onChange={v=>change('ratio',v)}/>
-    <Select className={styles.field} label="动效风格" disabled={!animationEnabled} data={state!.styles.filter(s=>s.published&&!s.legacy).map(s=>({value:s.id,label:s.name}))} value={form.style} onChange={v=>change('style',v)} searchable/>
-    {(()=>{
-     const models=state!.voice_models??[]
-     const model=models.find(m=>m.id===form.voice_model)??models[0]
-     const voices=model?model.voices:state!.voices
-     return <>
-      {models.length>1&&<Select className={styles.field} label="配音模型" data={models.map(m=>({value:m.id,label:m.name}))} value={model.id} allowDeselect={false} onChange={v=>{const next=models.find(m=>m.id===v);if(next)setForm(old=>old?{...old,voice_model:next.id,voice:next.default_voice,...(next.supports_speed?{}:{voice_speed:1,segment_voice_speeds:{}})}:old)}}/>}
-      <Select className={styles.field} label="配音音色" data={voices.map(v=>({value:v.id,label:v.name}))} value={form.voice} onChange={v=>change('voice',v)} searchable/>
-     </>
-    })()}
-    <NumberInput className={styles.field} label="全片配音语速" description="1 为原速，可先试 1.1 倍。修改后需重新制作对应配音、口型和时间轴。" value={form.voice_speed||1} disabled={speedLocked} min={.8} max={1.3} step={.05} decimalScale={2} onChange={v=>{if(typeof v==='number')change('voice_speed',v)}}/>
+    <Select className={styles.field} label="动效风格" disabled={!animationEnabled} data={state!.styles.filter(s=>s.published&&!s.legacy&&(!s.archived||s.id===form.style)).map(s=>({value:s.id,label:s.name+(s.archived?'（历史方案）':'')}))} value={form.style} onChange={v=>change('style',v)} searchable/>
    </div>
-   {!!run?.segments.length&&<details className={styles.panel}><summary>单段语速微调</summary>{run.segments.map(segment=><NumberInput key={segment.id} className={styles.field} mt="sm" label={`${segment.id} · ${segment.chapter||'口播段落'}语速`} placeholder={`跟随全片（${form.voice_speed||1} 倍）`} value={form.segment_voice_speeds?.[segment.id]??''} disabled={speedLocked} min={.8} max={1.3} step={.05} decimalScale={2} onChange={v=>{const speeds={...form.segment_voice_speeds};if(typeof v==='number')speeds[segment.id]=v;else delete speeds[segment.id];change('segment_voice_speeds',speeds)}}/>)}</details>}
+   <div className={styles.panel}><p>Seedance 2.5 直接生成口播画面和声音，字幕与动效跟随视频原声。</p><Select label="参考音色（可选）" placeholder="模型默认音色" clearable value={form.voice_reference||null} data={state!.project.input.assets.filter(a=>a.kind==='audio'&&!a.excluded).map(a=>({value:a.id,label:a.name}))} onChange={v=>change('voice_reference',v||'')}/><FileButton onChange={f=>void upload(f,'audio')}>{props=><Button {...props} mt="sm" variant="light" disabled={busy}>上传参考音色（较长录音自动截取 20 秒）</Button>}</FileButton></div>
    <Textarea className={styles.field} mt="md" label="主题与受众" value={form.topic} onChange={e=>change('topic',e.currentTarget.value)} autosize minRows={3}/>
    <Textarea className={styles.field} mt="md" label="完整口播稿（可选）" description="留空时由 Agent 根据主题创作" value={form.script} onChange={e=>change('script',e.currentTarget.value)} autosize minRows={4}/>
    <Textarea className={styles.field} mt="md" label="制作要求" value={form.direction} onChange={e=>change('direction',e.currentTarget.value)} autosize minRows={2}/>
    <Checkbox mt="md" label="使用数字人出镜" checked={form.use_avatar} onChange={e=>change('use_avatar',e.currentTarget.checked)}/>
    <Checkbox mt="md" label="加入动效画面" description="单纯人物口播可关闭，流程中不安排额外动效生成" checked={animationEnabled} onChange={e=>change('use_animation',e.currentTarget.checked)}/>
-   <div className={styles.actionRow}><Button className={styles.primary} loading={busy} onClick={()=>void action(async()=>{const {revision,title,topic,script,direction,style,voice,voice_model,ratio,use_avatar,use_animation,voice_speed,segment_voice_speeds}=form;await invokePackage(projectId,'avatar.configure',{revision,title,topic,script,direction,style,voice,...(voice_model?{voice_model}:{}),ratio,use_avatar,use_animation,voice_speed,segment_voice_speeds});const next=await refresh();setForm({...next.project.input})})}>保存设置</Button>
-    <FileButton accept="image/*" onChange={file=>void upload(file,'photo')}>{props=><Button {...props} className={styles.ghost} leftSection={<IconPhoto size={14}/>} disabled={busy}>上传人物照片</Button>}</FileButton>
+   <div className={styles.actionRow}><Button className={styles.primary} loading={busy} onClick={()=>void action(async()=>{const {revision,title,topic,script,direction,style,ratio,use_avatar,use_animation,voice_reference}=form;await invokePackage(projectId,'avatar.configure',{revision,title,topic,script,direction,style,ratio,use_avatar,use_animation,voice_reference});const next=await refresh();setForm({...next.project.input})})}>保存设置</Button>
+    <FileButton onChange={file=>void upload(file,'photo')}>{props=><Button {...props} className={styles.ghost} leftSection={<IconPhoto size={14}/>} disabled={busy}>上传人物照片</Button>}</FileButton>
    </div>
   </>
  }
@@ -181,8 +175,8 @@ export default function StudioWorkspace(){
   </>
  }
  function renderAssets(){
-  return <><div className={styles.inspectorTitle}><h2>素材与产物</h2><FileButton accept="image/png,image/jpeg,video/*,.txt,.md,text/plain,text/markdown" onChange={f=>void upload(f,f&&isTextFile(f)?'text':f&&isVideoFile(f)?'video':'image')}>{props=><Button {...props} size="xs" className={styles.ghost} disabled={busy} leftSection={<IconPlus size={14}/>}>添加素材</Button>}</FileButton></div>
-   <div className={styles.mediaGrid}>{state!.project.input.assets.map(a=><div className={styles.panel} key={a.id}><h3>{a.name}</h3>{a.kind!=='text'&&<div className={styles.mediaPreview}><ProtectedMedia url={assetURL(projectId,a.id)} kind={a.kind==='video'?'video':'image'} alt={a.name}/></div>}<span className={styles.subtle}>{a.kind==='photo'?'人物照片':a.kind==='video'?'参考视频':a.kind==='text'?'参考文案 · 分析结果见「参考素材分析」':'图片素材'}{a.duration>0?` · ${a.duration.toFixed(1)}s`:''}</span></div>)}</div>
+  return <><div className={styles.inspectorTitle}><h2>素材与产物</h2><FileButton onChange={f=>void upload(f,f?uploadKindOf(f):'file')}>{props=><Button {...props} size="xs" className={styles.ghost} disabled={busy} leftSection={<IconPlus size={14}/>}>添加素材</Button>}</FileButton></div>
+   <div className={styles.mediaGrid}>{state!.project.input.assets.map(a=><div className={styles.panel} key={a.id}><h3>{a.name}</h3>{a.kind!=='text'&&<div className={styles.mediaPreview}><ProtectedMedia url={assetURL(projectId,a.id)} kind={a.kind==='audio'?'audio':a.kind==='video'?'video':'image'} alt={a.name}/></div>}<span className={styles.subtle}>{a.kind==='audio'?'参考音色':a.kind==='photo'?'人物照片':a.kind==='video'?'参考视频':a.kind==='text'?'参考文案 · 分析结果见「参考素材分析」':'图片素材'}{a.duration>0?` · ${a.duration.toFixed(1)}s`:''}</span></div>)}</div>
    {!!state!.project.input.reference_links?.length&&<div className={styles.panel}><h3>参考网页</h3>{state!.project.input.reference_links.map(url=><p key={url}><a href={url} target="_blank" rel="noopener noreferrer" style={{color:'#8ed5ff',overflowWrap:'anywhere'}}>{url}</a></p>)}</div>}
    {!state!.project.input.assets.length&&!state!.project.input.reference_links?.length&&<div className={styles.empty}><IconPhoto size={32}/><span>上传人物照片和参考素材，供 Agent 制作使用。</span></div>}
    <h3>制作产物</h3>{renderArtifacts((run?.artifacts??[]).filter(a=>!a.id.startsWith('quality-')||a.id==='quality-review'))}
@@ -196,6 +190,7 @@ export default function StudioWorkspace(){
  }
  function renderDetail(p:PackageInfo){
   if(p.materialId&&state?.run)return <MaterialNodeDetail key={`${state.run.id}:${p.materialId}`} state={state} needId={p.materialId} onRefresh={refresh} onClose={()=>setSelected(null)} onAssist={mode=>assistFailure(mode,p.materialId)} agentBusy={!!agentBusy}/>
+  if(p.nativeSegmentId&&state?.run)return <NativeVideoDetail state={state} segmentId={p.nativeSegmentId} onClose={()=>setSelected(null)}/>
   if(p.merge&&state&&run)return <><div className={styles.inspectorTitle}><h2>素材汇总与镜头组装</h2><ActionIcon aria-label="返回画布" variant="subtle" onClick={()=>setSelected(null)}><IconX size={17}/></ActionIcon></div><p className={styles.subtle}>各个视频完成后汇入同一份素材清单，统一组装镜头，交给下一步审阅。</p><div className={styles.actionRow}><Button disabled={active||busy||!['paused','failed','interrupted'].includes(run.status)} loading={busy} onClick={()=>control(run.status==='paused'?'resume':'retry')}>{run.needs.every(n=>run.materials.some(m=>m.need_id===n.id))?'汇总素材并继续':'补齐素材并汇总'}</Button></div>{run.needs.map(n=><div className={styles.panel} key={n.id}><h3>{n.content}</h3><p>{run.materials.some(m=>m.need_id===n.id)?'视频已就绪':'视频待制作'}</p><Button size="compact-xs" variant="subtle" onClick={()=>setSelected(`material:${n.id}`)}>查看视频与提示词</Button></div>)}{renderShots()}</>
   return <><div className={styles.inspectorTitle}><div><span className={styles.badge}>{p.node} · v{p.version}</span><h2 style={{marginTop:12}}>{p.title}</h2></div><ActionIcon aria-label="返回画布" variant="subtle" onClick={()=>setSelected(null)}><IconX size={17}/></ActionIcon></div>
    <div className={styles.panel}><p>{p.description}</p><span className={styles.subtle}>产物：{p.node==='F12'?'口播成片、封面图':p.outputs.join('、')}</span>{!p.ready&&<Alert mt="md" color="yellow">{p.reason}</Alert>}</div>
@@ -211,7 +206,7 @@ export default function StudioWorkspace(){
    {p.node==='F11'&&run?.version==='avatar-workflow/3.0'&&<div className={styles.actionRow}><Button size="xs" variant="light" onClick={()=>setSelected('avatar.avatar')}>单独查看人物</Button><Button size="xs" variant="light" onClick={()=>setSelected('avatar.animation')}>单独查看动效</Button></div>}
    {(p.node==='F11.1'||p.node==='F11.2')&&renderArtifacts(nodeArtifacts(run?.artifacts??[],p.node))}
    {p.node==='F02'&&run?.script&&<div className={styles.panel}><p style={{whiteSpace:'pre-wrap'}}>{run.script}</p></div>}
-   {['F03','F04'].includes(p.node??'')&&run?.segments.map(s=><div className={styles.panel} key={s.id}><h3>{s.id} · {s.chapter}</h3><p>{s.text}</p>{s.audio&&<ProtectedMedia kind="audio" url={`/api/v1/agent/runs/${run.id}/segments/${s.id}/audio`}/>}<Button variant="subtle" size="compact-xs" onClick={()=>setInput(`请修改${p.node==='F04'?'配音':'文案'}段落 ${s.id}：`)}>提出修改</Button></div>)}
+   {['F03','F04'].includes(p.node??'')&&run?.segments.map(s=><div className={styles.panel} key={s.id}><h3>{s.id} · {s.chapter}</h3><p>{s.text}</p>{p.node==='F04'&&s.native_video&&<ProtectedMedia kind="video" url={artifactURL(run.id,'native-'+s.id)}/>} {s.audio&&<ProtectedMedia kind="audio" url={`/api/v1/agent/runs/${run.id}/segments/${s.id}/audio`}/>}<Button variant="subtle" size="compact-xs" onClick={()=>setInput(`请修改${p.node==='F04'?(run.input.speech_mode==='native-video'?'原声人物':'配音'):'文案'}段落 ${s.id}：`)}>提出修改</Button></div>)}
    {['F05','F06','F07','F08'].includes(p.node??'')&&run?.needs.filter(n=>p.node==='F05'||n.kind===({F06:'avatar',F07:'animation',F08:'real'} as Record<string,string>)[p.node!]).map(n=><div className={styles.panel} key={n.id}><h3>{n.id} · {n.kind}</h3><p>{n.content}</p><Button variant="subtle" size="compact-xs" onClick={()=>setInput(`请读取 ${p.node}「${p.title}」中的素材 ${n.id} 并修改，修改要求：`)}>提出修改</Button></div>)}
    {p.node==='F04'&&run?.audio_quality&&<QualityReview runId={run.id} report={run.audio_quality}/>}
    {['F11','F11.1','F11.2','F12'].includes(p.node??'')&&run?.quality_review&&<QualityReview runId={run.id} report={run.quality_review} reviewed={!!run.final_confirmed}/>}
@@ -235,24 +230,24 @@ export default function StudioWorkspace(){
      {selectedPackage&&<aside className={styles.flowDetail} aria-label="步骤详情">{renderDetail(selectedPackage)}</aside>}
     </div>:<div className={styles.inspector}>{tab==='settings'?renderSettings():tab==='shots'?renderShots():tab==='timeline'?renderTimeline():tab==='assets'?renderAssets():null}</div>}
   </section>
-  <aside className={styles.chat} aria-label="Agent 对话"><div className={styles.chatHeader}><div className={styles.agentBrand}><div className={styles.agentIcon}><IconRobot size={21}/></div><div><strong>Flova Agent</strong><small>AI 视频制作助手</small></div></div><span className={styles.badge}>{connection}</span></div>
+  <aside className={styles.chat} aria-label="Agent 对话"><div className={styles.chatHeader}><div className={styles.agentBrand}><div className={styles.agentIcon}><IconRobot size={21}/></div><div><strong>AvaSpeak Agent</strong><small>AI 视频制作助手</small></div></div><span className={styles.badge}>{connection}</span></div>
    <div className={styles.chatContext}><IconSchema size={13}/><span>已关联当前项目 · {nodes.length} 个制作节点</span></div>
    <div className={styles.chatMessages} role="log" aria-label="对话消息" onScroll={e=>{const el=e.currentTarget;followChat.current=el.scrollHeight-el.scrollTop-el.clientHeight<64}}>
-    {!messages.length&&<div className={styles.message}><div className={styles.messageName}><IconSparkles size={13}/>Flova 导演助理</div><div className={styles.bubble}>你好，我可以帮你整理创意、生成口播稿、制作数字人和动效。告诉我想做什么，也可以点击画布中的节点开始。</div></div>}
+    {!messages.length&&<div className={styles.message}><div className={styles.messageName}><IconSparkles size={13}/>AvaSpeak 导演助理</div><div className={styles.bubble}>你好，我可以帮你整理创意、生成口播稿、制作数字人和动效。告诉我想做什么，也可以点击画布中的节点开始。</div></div>}
     {timeline.map(item=>{
      if(item.kind==='notice')return <div key={item.id} className={styles.message} data-chat-item="notice">
       {state&&summary?.action!=='proposal'&&<ExecutionStatus state={state} busy={busy||agentBusy} onPrimary={statusAction} onCurrent={viewCurrent} onPause={()=>control('pause')} onStop={()=>control('stop')} syncError={syncError}/>}
       {proposal&&<div className={styles.proposal} data-pending-proposal><h4>修改方案 · 等待确认</h4>{proposal.lines.map((line,i)=><p key={i}>{line}</p>)}<Button size="xs" fullWidth className={styles.primary} loading={busy} onClick={()=>void action(()=>applyPackageProposal(projectId,proposal))}>应用修改并重新制作</Button><Button size="compact-xs" variant="subtle" mt={8} onClick={()=>setInput('请调整刚才的修改方案：')}>继续调整方案</Button></div>}
      </div>
      const m=item.message
-     return <div key={m.id} data-chat-item="message" className={`${styles.message} ${m.role==='user'?styles.userMessage:''}`}>{m.role==='user'?<div className={styles.userBubble}>{m.content}</div>:<div><div className={styles.messageName}><IconSparkles size={13}/>Flova 导演助理</div><AgentProcess events={Object.values(tools).filter(event=>m.id==='reply-'+event.turnId)} busy={!!agentBusy&&m.id==='reply-'+processTurn} packages={state?.packages??[]}/>{m.content&&<div className={styles.bubble}><MarkdownLite content={m.content} color="#c5d1e4" mutedColor="#879bb4" borderColor="#314057" codeBg="#101620"/></div>}</div>}</div>
+     return <div key={m.id} data-chat-item="message" className={`${styles.message} ${m.role==='user'?styles.userMessage:''}`}>{m.role==='user'?<div className={styles.userBubble}>{m.content}</div>:<div><div className={styles.messageName}><IconSparkles size={13}/>AvaSpeak 导演助理</div><AgentProcess events={Object.values(tools).filter(event=>m.id==='reply-'+event.turnId)} busy={!!agentBusy&&m.id==='reply-'+processTurn} packages={state?.packages??[]}/>{m.content&&<div className={styles.bubble}><MarkdownLite content={m.content} color="#c5d1e4" mutedColor="#879bb4" borderColor="#314057" codeBg="#101620"/></div>}</div>}</div>
     })}
     {agentBusy&&!messages.some(message=>message.id==='reply-'+processTurn)&&<AgentProcess events={[]} busy packages={state?.packages??[]}/>}
     <div ref={end}/>
    </div>
    {!agentBusy&&<div className={styles.suggestions}>{['先帮我规划制作流程','查看当前制作进度','帮我优化口播文案'].map(text=><UnstyledButton className={styles.suggestion} key={text} onClick={()=>setInput(text)}>✦ {text}</UnstyledButton>)}</div>}
    <div className={styles.chatComposer}><Textarea aria-label="向 Agent 发送指令" placeholder="描述你想要的画面，或告诉我需要修改什么…" value={input} onChange={e=>setInput(e.currentTarget.value)} autosize minRows={2} maxRows={7} classNames={{input:styles.promptInput}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();void send()}}}/>
-    <div className={styles.composerFoot}><div className={styles.composerTools}><FileButton accept="image/*" onChange={f=>void upload(f,'photo')}>{props=><ActionIcon {...props} variant="subtle" aria-label="上传人物照片" className={styles.iconButton}><IconPhoto size={16}/></ActionIcon>}</FileButton><UnstyledButton className={styles.suggestion} onClick={()=>setLibrary(true)}><IconBox size={11}/> Skill</UnstyledButton></div>{agentBusy?<ActionIcon aria-label="停止回复" color="red" variant="light" onClick={()=>void stopAgent(projectId).then(()=>refresh()).catch(e=>setError(e.message))}><IconPlayerStop size={15}/></ActionIcon>:<ActionIcon aria-label="发送消息" className={styles.primary} disabled={!input.trim()||!state} onClick={()=>void send()}><IconArrowUp size={18}/></ActionIcon>}</div>
+    <div className={styles.composerFoot}><div className={styles.composerTools}><FileButton onChange={f=>void upload(f,f?uploadKindOf(f,true):'file')}>{props=><ActionIcon {...props} variant="subtle" aria-label="上传文件" className={styles.iconButton}><IconPhoto size={16}/></ActionIcon>}</FileButton><UnstyledButton className={styles.suggestion} onClick={()=>setLibrary(true)}><IconBox size={11}/> Skill</UnstyledButton></div>{agentBusy?<ActionIcon aria-label="停止回复" color="red" variant="light" onClick={()=>void stopAgent(projectId).then(()=>refresh()).catch(e=>setError(e.message))}><IconPlayerStop size={15}/></ActionIcon>:<ActionIcon aria-label="发送消息" className={styles.primary} disabled={!input.trim()||!state} onClick={()=>void send()}><IconArrowUp size={18}/></ActionIcon>}</div>
    </div>
   </aside></div>
  </main>{editingScript&&<ScriptEditor key={editingScript.id+editingScript.confirmation_version} projectId={projectId} run={editingScript} currentRun={state?.run??null} onSaved={refresh} onClose={()=>setEditingScript(null)}/>}<PackageLibrary opened={library} onClose={()=>setLibrary(false)} onSelect={p=>setInput(`请使用「${p.title}」处理当前项目，先检查需要的输入。`)}/></StudioShell>

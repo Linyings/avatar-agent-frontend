@@ -6,7 +6,7 @@ const dependencies:Record<string,string[]>={F01:[],'F01.4':['F01'],F02:['F01.4']
 function fixture():StudioState{
  const input={revision:1,title:'测试',topic:'口播',script:'正文',direction:'',ratio:'9:16',style:'',voice:'',use_avatar:true,assets:[]}
  const packages=Object.entries(dependencies).map(([node,deps])=>({id:node,node,title:node,dependencies:deps,ready:true}) as PackageInfo)
- return {project:{id:'test',name:'test',input},run:null,proposal:null,packages,styles:[],voices:[],agent_configured:true}
+ return {project:{id:'test',name:'test',input},run:null,proposal:null,packages,styles:[],agent_configured:true}
 }
 describe('adaptive workflow and real execution state',()=>{
  it('attributes the reported failure to its material and supports nested motion phases',()=>{

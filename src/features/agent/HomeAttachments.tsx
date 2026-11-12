@@ -1,12 +1,18 @@
 import {useEffect,useRef,useState,type ReactNode} from 'react'
 import {ActionIcon,Button,FileButton,Menu,Modal,Textarea,UnstyledButton} from '@mantine/core'
-import {IconCheck,IconLink,IconMovie,IconPhoto,IconPlus,IconUpload,IconX} from '@tabler/icons-react'
+import {IconCheck,IconFile,IconLink,IconMusic,IconPlus,IconUpload,IconX,IconMovie} from '@tabler/icons-react'
 import styles from './Studio.module.css'
 
 export interface HomeFile {id:string;file:File;uploaded:boolean;kind?:string;error?:boolean}
-export const isTextFile=(file:File)=>/\.(txt|md)$/i.test(file.name)&&(!file.type||file.type.startsWith('text/')||file.type==='application/octet-stream')
-export const isVideoFile=(file:File)=>file.type.startsWith('video/')||((!file.type||file.type==='application/octet-stream')&&/\.(mp4|mov|webm|mkv|avi|m4v)$/i.test(file.name))
-export const isSupportedImage=(file:File)=>/^image\/(png|jpeg)$/.test(file.type)||((!file.type||file.type==='application/octet-stream')&&/\.(png|jpe?g)$/i.test(file.name))
+export const isTextFile=(file:File)=>/\.(txt|md|markdown)$/i.test(file.name)&&(!file.type||file.type.startsWith('text/')||file.type==='application/octet-stream')
+export const isVideoFile=(file:File)=>file.type.startsWith('video/')||((!file.type||file.type==='application/octet-stream')&&/\.(mp4|mov|webm|mkv|avi|m4v|flv|wmv|mpg|mpeg|3gp)$/i.test(file.name))
+export const isAudioFile=(file:File)=>file.type.startsWith('audio/')||((!file.type||file.type==='application/octet-stream')&&/\.(mp3|wav|m4a|aac|flac|ogg|opus|wma|amr)$/i.test(file.name))
+// Any still image; the server converts formats other than PNG/JPEG to JPEG.
+export const isSupportedImage=(file:File)=>(file.type.startsWith('image/')&&file.type!=='image/svg+xml')||((!file.type||file.type==='application/octet-stream')&&/\.(png|jpe?g|webp|heic|heif|bmp|gif|tiff?|avif)$/i.test(file.name))
+export type UploadKind='photo'|'image'|'video'|'audio'|'text'|'file'
+// Everything else is kept as an attachment rather than rejected.
+export const uploadKindOf=(file:File,portrait=false):UploadKind=>isTextFile(file)?'text':isVideoFile(file)?'video':isAudioFile(file)?'audio':isSupportedImage(file)?(portrait?'photo':'image'):'file'
+export const fileLabel=(file:File)=>({text:'参考文案',video:'参考视频',audio:'音频',photo:'图片',image:'图片',file:'附件'})[uploadKindOf(file)]
 export const fileIdentity=(file:File)=>JSON.stringify([file.name,file.size,file.type,file.lastModified])
 
 function parseLinks(value:string,existing:string[]){
@@ -24,7 +30,11 @@ function parseLinks(value:string,existing:string[]){
 function FilePreview({file}:{file:File}){
  const [url,setURL]=useState('')
  useEffect(()=>{const url=URL.createObjectURL(file);setURL(url);return()=>URL.revokeObjectURL(url)},[file])
- return isTextFile(file)?<span>参考文案</span>:isVideoFile(file)?<><video src={url||undefined} preload="metadata" muted playsInline/><IconMovie className={styles.videoMark} size={21}/></>:<img src={url||undefined} alt={file.name}/>
+ const kind=uploadKindOf(file)
+ if(kind==='video')return <><video src={url||undefined} preload="metadata" muted playsInline/><IconMovie className={styles.videoMark} size={21}/></>
+ if(kind==='image')return <img src={url||undefined} alt={file.name}/>
+ const Icon=kind==='audio'?IconMusic:IconFile
+ return <span className={styles.filePreviewLabel}><Icon size={22}/>{kind==='text'?'参考文案':kind==='audio'?'音频':(file.name.split('.').pop()||'附件').toUpperCase().slice(0,6)}</span>
 }
 
 interface Props {
@@ -37,7 +47,7 @@ interface Props {
 export default function HomeAttachments({files,links,primaryId,uploadingId,busy,locked,avatar,opened,onOpened,onFiles,onLinks,onRemove,onPrimary,children}:Props){
  const [dragging,setDragging]=useState(false)
  const [linkOpen,setLinkOpen]=useState(false);const [linkText,setLinkText]=useState('');const [linkError,setLinkError]=useState('')
- const imageReset=useRef<()=>void>(null);const videoReset=useRef<()=>void>(null)
+ const imageReset=useRef<()=>void>(null)
  const addLinks=()=>{try{onLinks(parseLinks(linkText,links));setLinkOpen(false);setLinkText('');setLinkError('')}catch(e){setLinkError((e as Error).message)}}
  const count=files.length+links.length
  return <>
@@ -46,16 +56,15 @@ export default function HomeAttachments({files,links,primaryId,uploadingId,busy,
     <Menu opened={opened} onChange={onOpened} keepMounted withinPortal={false} width={230} position="bottom-start">
      <Menu.Target><UnstyledButton className={styles.attachmentDrop} data-dragging={dragging} aria-label="添加参考素材" disabled={busy}>
       <span className={styles.attachmentPlus}>{dragging?<IconUpload size={18}/>:<IconPlus size={18}/>}</span>
-      <strong>{dragging?'松开即可添加素材':'添加图片 / 视频 / 链接'}</strong>
+      <strong>{dragging?'松开即可添加素材':'添加图片 / 视频 / 音频 / 文件'}</strong>
       <span>点击选择，或拖入多个文件</span>
-      <small>图片 ≤8MB · 视频 ≤256MB · 文案 ≤1MB</small>
+      <small>任意格式 · 单个文件 ≤256MB</small>
      </UnstyledButton></Menu.Target>
      <Menu.Dropdown className={styles.attachmentMenu}>
-      <FileButton accept=".png,.jpg,.jpeg,image/png,image/jpeg" multiple resetRef={imageReset} onChange={files=>{onFiles(files);imageReset.current?.()}}>{props=><Menu.Item {...props} disabled={busy} leftSection={<IconPhoto size={16}/>}>上传人物图片</Menu.Item>}</FileButton>
-      <FileButton accept="video/*" multiple resetRef={videoReset} onChange={files=>{onFiles(files);videoReset.current?.()}}>{props=><Menu.Item {...props} disabled={busy} leftSection={<IconMovie size={16}/>}>上传参考视频</Menu.Item>}</FileButton>
-      <FileButton accept=".txt,.md,text/plain,text/markdown" multiple onChange={onFiles}>{props=><Menu.Item {...props} disabled={busy}>上传参考文案（TXT / Markdown）</Menu.Item>}</FileButton><Menu.Divider/>
+      <FileButton multiple resetRef={imageReset} onChange={files=>{onFiles(files);imageReset.current?.()}}>{props=><Menu.Item {...props} disabled={busy} leftSection={<IconUpload size={16}/>}>上传文件（图片 / 视频 / 音频 / 文档）</Menu.Item>}</FileButton>
+      <Menu.Divider/>
       <Menu.Item leftSection={<IconLink size={16}/>} disabled={busy||locked} onClick={()=>{setLinkOpen(true);setLinkError('')}}>添加网页链接</Menu.Item>
-      <Menu.Label>图片 PNG/JPG ≤8MB · 视频 ≤256MB<br/>TXT / Markdown ≤1MB · 支持多选</Menu.Label>
+      <Menu.Label>不限格式 · 支持多选<br/>图片自动转换；无法识别的文件作为附件保存</Menu.Label>
      </Menu.Dropdown>
     </Menu>
    </div>
@@ -70,7 +79,7 @@ export default function HomeAttachments({files,links,primaryId,uploadingId,busy,
       {avatar&&isSupportedImage(item.file)&&<UnstyledButton className={styles.portraitChoice} data-selected={item.id===primaryId} disabled={busy||locked} aria-label={'设为主人物'+item.file.name} onClick={()=>onPrimary(item.id)}>{item.id===primaryId?<><IconCheck size={10}/>主人物</>:'设为主人物'}</UnstyledButton>}
      </div>
      <div className={styles.attachmentName} title={item.file.name}>{item.file.name}</div>
-     <div className={styles.attachmentStatus} data-error={item.error} role="status">{item.uploaded?'已上传':uploadingId===item.id?'上传中…':item.error?'上传失败，可重试':`${isVideoFile(item.file)?'参考视频':isTextFile(item.file)?'参考文案':'图片'} · ${(item.file.size/1024/1024).toFixed(1)} MB`}</div>
+     <div className={styles.attachmentStatus} data-error={item.error} role="status">{item.uploaded?'已上传':uploadingId===item.id?'上传中…':item.error?'上传失败，可重试':`${fileLabel(item.file)} · ${(item.file.size/1024/1024).toFixed(1)} MB`}</div>
     </div>)}
     {links.map(link=><div className={styles.attachmentCard} key={link}>
      <div className={`${styles.attachmentPreview} ${styles.linkPreview}`}><IconLink size={25}/><span>{new URL(link).hostname}</span><ActionIcon className={styles.attachmentRemove} size={20} radius="xl" aria-label={'移除'+link} disabled={busy||locked} onClick={()=>onLinks(links.filter(value=>value!==link))}><IconX size={12}/></ActionIcon></div>

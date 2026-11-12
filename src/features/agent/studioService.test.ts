@@ -33,13 +33,6 @@ describe('studio API',()=>{
   expect(input).not.toHaveProperty('voice')
   expect(input).not.toHaveProperty('voice_model')
  })
- it('sends the chosen voice so the server validates it against the model catalog',async()=>{
-  vi.mocked(authenticatedFetch).mockResolvedValue(new Response(JSON.stringify({data:{id:'new'}})))
-  await createStudio('口播视频','9:16','',[],'Calm_Woman','kling-lip-sync/tts')
-  const input=JSON.parse(vi.mocked(authenticatedFetch).mock.calls[0][1]!.body as string)
-  expect(input.voice).toBe('Calm_Woman')
-  expect(input.voice_model).toBe('kling-lip-sync/tts')
- })
  it('shows inherited confirmed segmentation as complete during a downstream rerun',()=>{
   const state={run:{steps:[],segments:[{id:'p1'}],script_confirmed:true}} as unknown as StudioState
   expect(nodeStatus(state,'F03')).toBe('done')
