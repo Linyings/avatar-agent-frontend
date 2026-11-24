@@ -137,7 +137,7 @@ function Canvas({state,onOpen,onEditScript,storageKey}:{state:StudioState;onOpen
   >
    <Background variant={BackgroundVariant.Dots} gap={24} size={1} color="#344256"/>
    <Panel position="top-left" className={styles.toolbar}>
-    <Select aria-label="定位制作步骤" placeholder="定位步骤" data={packages.map(p=>({value:p.node!,label:`${p.node} ${p.title}`}))} value={null} onChange={id=>{if(id)focus(id)}} size="xs" searchable w={170} comboboxProps={{withinPortal:false}} classNames={{input:styles.select}}/>
+    <Select aria-label="定位制作步骤" placeholder="定位步骤" data={packages.map(p=>({value:p.node!,label:`${p.stepNumber??p.node} ${p.title}`}))} value={null} onChange={id=>{if(id)focus(id)}} size="xs" searchable w={170} comboboxProps={{withinPortal:false}} classNames={{input:styles.select}}/>
     <Tooltip label="按依赖重新排列节点"><Button size="compact-xs" variant="subtle" leftSection={<IconLayoutDistributeHorizontal size={15}/>} onClick={()=>void arrange()} loading={layingOut}>自动排列</Button></Tooltip>
     <Tooltip label="定位当前制作步骤"><ActionIcon variant="subtle" aria-label="定位当前步骤" onClick={()=>{if(current)focus(current)}}><IconFocus2 size={17}/></ActionIcon></Tooltip>
     <Tooltip label="查看完整流程"><ActionIcon variant="subtle" aria-label="查看全部节点" onClick={()=>void flow.fitView({padding:.12,duration:250})}><IconArrowsMaximize size={17}/></ActionIcon></Tooltip>

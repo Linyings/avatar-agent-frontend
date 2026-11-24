@@ -45,7 +45,7 @@ export default function MotionStyleCard({style,selected,playing,root,onSelect}:{
    {poster.src&&<img src={poster.src} alt={`${style.name}风格示例`}/>}
    {demo.src&&!decodeError&&<video ref={video} src={demo.src} poster={poster.src||undefined} aria-label={`${style.name}效果演示`} autoPlay muted loop playsInline preload="none" onError={()=>setDecodeError(true)}/>}
    {failed&&<span className={styles.mediaHint}>演示加载失败，点击重试</span>}
-   {!style.card_preview&&<span className={styles.mediaHint}>演示暂不可用</span>}
+   {!style.card_preview&&<span className={styles.mediaHint}>{style.card_poster?'参考封面':'预览暂不可用'}</span>}
   </div>
   <div className={styles.cardLabel}><span>{style.name}</span>{selected&&<IconCheck size={15}/>}</div>
  </UnstyledButton>

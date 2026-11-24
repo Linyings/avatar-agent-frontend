@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useReducer, useCallback, useEffect, useRef } from 'react'
 import { debounce } from 'lodash'
 import ProjectService from '../services/projectService'
-import { cleanupDeletedProjectLocalData } from '../services/projectLocalCleanup'
 import type { SubtitleExtractionResult } from '../types/material'
 import { buildSubtitleExtractionResultFromPayload } from '../utils/subtitleTransform'
 import type {
@@ -601,7 +600,6 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const deleteProject = useCallback(async (projectId: string) => {
     try {
       await ProjectService.deleteProject(projectId)
-      await cleanupDeletedProjectLocalData(projectId)
       dispatch({ type: 'CLEAR_ALL' })
     } catch (error) {
       console.error('删除项目失败:', error)

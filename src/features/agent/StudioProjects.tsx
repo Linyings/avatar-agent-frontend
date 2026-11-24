@@ -53,6 +53,6 @@ export default function StudioProjects(){
   </div>
  </main>
  <Modal opened={!!edit} onClose={()=>setEdit(null)} title="重命名项目" centered><TextInput label="项目名称" value={name} onChange={e=>setName(e.currentTarget.value)} maxLength={100}/><Button mt="md" disabled={!name.trim()} loading={busy} onClick={()=>edit&&void update(edit,{name:name.trim()})}>保存</Button></Modal>
- <Modal opened={!!deleting} onClose={()=>setDeleting(null)} title="删除项目" centered><p>确定删除「{deleting?.name}」及其制作数据？此操作不能撤销。</p><Button color="red" loading={busy} onClick={()=>void remove()}>确认删除</Button></Modal>
+ <Modal opened={!!deleting} onClose={()=>setDeleting(null)} title="删除项目" centered><p>确定删除「{deleting?.name}」？服务器上的原始素材、制作过程文件、成片以及浏览器缓存都会一起删除，无法恢复。正在制作的项目需先停止。</p><Button color="red" loading={busy} onClick={()=>void remove()}>确认删除</Button></Modal>
  </StudioShell>
 }

@@ -5,8 +5,20 @@ import MaterialNodeDetail from './MaterialNodeDetail'
 import {materialFixture} from './materialNodes.fixture'
 const api=vi.hoisted(()=>({action:vi.fn()}))
 vi.mock('./studioService',async()=>({...await vi.importActual('./studioService'),materialAction:api.action}))
-vi.mock('./StudioShell',()=>({ProtectedMedia:()=> <div>实际视频预览</div>}))
+vi.mock('./StudioShell',()=>({ProtectedMedia:({kind,url}:{kind:string;url:string})=> <div data-testid={`media-${kind}`} data-url={url}>实际视频预览</div>}))
 beforeEach(()=>{vi.resetAllMocks()});afterEach(cleanup)
+it('shows the native video with its generation prompt before the reuse material is ready, without an audio-only player',()=>{
+ const s=materialFixture(),run=s.run!;run.input.speech_mode='native-video'
+ run.segments[0].native_video='p1/native.mp4';run.segments[0].audio='p1/audio.wav'
+ run.artifacts=[{id:'native-p1',name:'原声人物.mp4',media_type:'video/mp4'}];run.materials=[]
+ run.steps=[{id:'F04/p1',status:'succeeded',seconds:4},{id:'F04/p1-chunk-1',status:'succeeded',seconds:3,generation_prompt:'人物自然朗读原理'}]
+ render(<MantineProvider><MaterialNodeDetail state={s} needId="a1" onRefresh={vi.fn()} onClose={vi.fn()}/></MantineProvider>)
+ expect(screen.getByTestId('media-video')).toHaveAttribute('data-url','/api/v1/avatar-mvp/runs/r/artifacts/native-p1')
+ expect(screen.queryByTestId('media-audio')).not.toBeInTheDocument()
+ fireEvent.click(screen.getByText('查看实际提交的完整提示词'))
+ expect(screen.getByText('人物自然朗读原理')).toBeVisible()
+ expect(api.action).not.toHaveBeenCalled()
+})
 it('shows the exhausted retry budget, real cause and repair strategy',()=>{
  const s=materialFixture();s.run!.status='failed';
  s.run!.steps.push({id:'F07/m1/scene-2',status:'failed',seconds:3,error:'场景2关键内容未完整展示',retry:{last_error:'缩水未展示',strategy:'按3.07秒调整出场时间',automatic_retries:3,exhausted:true}});

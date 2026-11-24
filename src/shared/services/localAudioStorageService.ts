@@ -116,12 +116,16 @@ const runStoreOperation = async <T>(
     let result: T | undefined
 
     if (request) {
-      request.onsuccess = () => {
+      // Capture the result before the cursor handler calls continue() (which
+      // makes request.result unreadable until the next event), then preserve it.
+      const operationSuccess = request.onsuccess
+      request.onsuccess = event => {
         result = request.result
+        operationSuccess?.call(request, event)
       }
-      request.onerror = () => {
+      request.addEventListener('error', () => {
         reject(request.error ?? new Error('本地音频缓存操作失败'))
-      }
+      })
     }
 
     transaction.oncomplete = () => {

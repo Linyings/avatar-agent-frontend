@@ -77,3 +77,18 @@ it('offers a retry after catalog failure and an explicit empty search state',asy
  fireEvent.change(screen.getByRole('textbox',{name:'搜索动效风格'}),{target:{value:'没有这个风格'}})
  expect(screen.getByText('没有找到匹配的风格，试试其他关键词。')).toBeVisible()
 })
+
+it('shows six explainer choices and hides archived MG styles while supporting poster-only references',async()=>{
+ const choices=['podcast','timeline','ui-morph','product','storybook','chronicle'].map((id,i)=>({id:'explain-'+id,name:`解释方案${i+1}`,description:`方案说明${i+1}`,published:true,legacy:false,card_poster:'/poster/'+id,preview_kind:i===5?'reference-poster':'upstream-original'}))
+ api.catalog.mockResolvedValue({styles:[...choices,{...catalog[0],archived:true}]})
+ const onSelect=vi.fn()
+ render(<MantineProvider><MotionStylePicker opened onSelect={onSelect} onClose={vi.fn()} value={null}/></MantineProvider>)
+ const card=await screen.findByRole('button',{name:'预览解释方案6'})
+ expect(screen.getAllByRole('button',{name:/^预览解释方案/})).toHaveLength(6)
+ expect(screen.queryByRole('button',{name:'预览扁平矢量'})).not.toBeInTheDocument()
+ fireEvent.click(card)
+ expect(screen.getByText('方案说明6')).toBeVisible()
+ expect(screen.queryByText('演示暂不可用')).not.toBeInTheDocument()
+ fireEvent.click(screen.getByRole('button',{name:'使用此风格'}))
+ expect(onSelect).toHaveBeenCalledWith({id:'explain-chronicle',name:'解释方案6'})
+})

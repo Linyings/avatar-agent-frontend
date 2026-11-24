@@ -1,4 +1,4 @@
-import {nodeStatus,confirmationNode,stageNode,materialNodeID,type PackageInfo,type StudioState} from './studioService'
+import {nodeStatus,confirmationNode,stageNode,materialNodeID,displayMaterialNodeID,nativeVideoWorkflow,workflowStages,type PackageInfo,type StudioState} from './studioService'
 
 // API plans are authoritative. The fallback keeps cached/older snapshots usable.
 function plannedNodes(state:StudioState):Set<string>{
@@ -17,18 +17,24 @@ function plannedNodes(state:StudioState):Set<string>{
 
 export function workflowPackages(state:StudioState):PackageInfo[]{
  if(state.workflow_plan?.stages?.length){
-  return state.workflow_plan.stages.flatMap((stage,i)=>{
+  const stages=workflowStages(state),native=nativeVideoWorkflow(state)
+  return stages.flatMap((stage,i)=>{
    const p=state.packages.find(p=>p.node===stage.node)!
-   const base={...p,id:p?.id??stage.node,node:stage.node,title:stage.title,description:p?.description??stage.title,outputs:p?.outputs??[],ready:p?.ready??true,members:stage.members,stepNumber:i+1,dependencies:i?[state.workflow_plan!.stages![i-1].node]:[]} as PackageInfo
-   if(stage.node!=='F10'||!state.run?.needs.length)return [base]
-   const needs=state.run.needs
-   const children=needs.map((n,index):PackageInfo=>{
+   const base={...p,id:p?.id??stage.node,node:stage.node,title:stage.title,description:native&&stage.node==='F10'?'Seedance 同时生成人物画面和声音，按实际原声制作字幕、专用动效与镜头。':p?.description??stage.title,outputs:p?.outputs??[],ready:p?.ready??true,members:stage.members,stepNumber:stage.stepNumber,dependencies:i?[stages[i-1].node]:[]} as PackageInfo
+   if(stage.node!=='F10'||!state.run||(!state.run.needs.length&&!(native&&state.run.segments.length)))return [base]
+   const run=state.run,needs=run.needs
+   const nativeChildren:PackageInfo[]=native?run.segments.map((segment,index)=>{
+    const need=needs.find(n=>n.kind==='avatar'&&n.segment_id===segment.id)
+    const source=state.packages.find(p=>p.node==='F04')??base
+    return {...source,id:`native:${segment.id}`,node:`F04/${segment.id}`,nativeSegmentId:segment.id,materialId:need?.id,members:undefined,stepNumber:`${base.stepNumber}.${index+1}`,title:`${run.input.use_avatar?'数字人视频':'原声视频'}（含原声） · ${segment.chapter||index+1}`,description:segment.text,dependencies:base.dependencies,outputs:['原声视频','制作提示词']}
+   }):[]
+   const children=[...nativeChildren,...needs.filter(n=>!native||n.kind!=='avatar'||!run.segments.some(s=>s.id===n.segment_id)).map((n,index):PackageInfo=>{
     const source=state.packages.find(p=>p.node===materialNodeID(n).split('/')[0])??base
-    const prerequisites=n.kind==='animation'?needs.filter(other=>other.kind==='avatar'&&other.segment_id===n.segment_id).map(materialNodeID):[]
+    const prerequisites=n.kind==='animation'?(native?nativeChildren.filter(p=>p.nativeSegmentId===n.segment_id).map(p=>p.node!):needs.filter(other=>other.kind==='avatar'&&other.segment_id===n.segment_id).map(materialNodeID)):[]
     const segment=state.run?.segments.find(s=>s.id===n.segment_id)
-    return {...source,id:`material:${n.id}`,node:materialNodeID(n),materialId:n.id,members:undefined,stepNumber:`7.${index+1}`,title:`${({avatar:'人物视频',animation:'专用动效',real:'实拍素材'} as Record<string,string>)[n.kind]} · ${segment?.chapter||index+1}`,description:n.content,dependencies:prerequisites.length?prerequisites:base.dependencies,outputs:['视频','制作提示词']}
-   })
-   return [...children,{...base,merge:true,title:'素材汇总与镜头组装',description:'所有视频完成后统一汇总素材、配音与字幕，组装分镜并交给下一步审阅。',dependencies:children.map(p=>p.node!),members:['F09','F10']}]
+    return {...source,id:`material:${n.id}`,node:displayMaterialNodeID(state,n),materialId:n.id,members:undefined,stepNumber:`${base.stepNumber}.${nativeChildren.length+index+1}`,title:`${({avatar:'人物视频',animation:'专用动效',real:'实拍素材'} as Record<string,string>)[n.kind]} · ${segment?.chapter||index+1}`,description:n.content,dependencies:prerequisites.length?prerequisites:base.dependencies,outputs:['视频','制作提示词']}
+   })]
+   return [...children,{...base,merge:true,title:'素材汇总与镜头组装',description:`所有视频完成后统一汇总素材、${native?'视频原声':'配音'}与字幕，组装分镜并交给下一步审阅。`,dependencies:children.map(p=>p.node!),members:native?['F05','F09','F10']:['F09','F10']}]
   })
  }
  const active=plannedNodes(state),all=new Map(state.packages.filter(p=>p.node).map(p=>[p.node!,p]))
@@ -54,6 +60,7 @@ export interface ExecutionSummary {
 }
 export function executionSummary(state:StudioState):ExecutionSummary{
  const run=state.run,activity=state.agent_activity,packages=workflowPackages(state)
+ const native=nativeVideoWorkflow(state)
  const failed=run&&['failed','submission_unknown','interrupted'].includes(run.status)
  // Historical snapshots stored the first error with the last executed stage.
  const errorStep=failed?(run.error_step_id||run.steps.find(s=>s.status==='failed'&&s.error===run.error)?.id):undefined
@@ -62,12 +69,12 @@ export function executionSummary(state:StudioState):ExecutionSummary{
  const rawNode=run?.status==='awaiting_confirmation'?confirmationNode(run.confirmation):stage?.split('/')[0]
  const node=rawNode?stageNode(state,run?.status==='awaiting_confirmation'?rawNode:stage??rawNode):undefined
  const step=packages.find(p=>p.node===node)
- const label=step?`${step.node} ${step.title}`:node??''
+ const label=step?`${step.stepNumber?`第 ${step.stepNumber} 步 ·`:step.node} ${step.title}`:node??''
  const progress={completed:packages.filter(p=>nodeStatus(state,p.node!)==='done').length,total:packages.length,node}
  const make=(title:string,detail:string,tone:ExecutionSummary['tone'],action?:ExecutionSummary['action'],running=false):ExecutionSummary=>({title,detail,tone,action,running,...progress})
  const audioCompleted=run?.segments.filter(s=>!!s.audio&&s.duration>0).length??0
  const audioSeconds=state.audio_timing?.seconds??run?.segments.reduce((total,s)=>total+(s.audio&&Number.isFinite(s.duration)&&s.duration>0?s.duration:0),0)??0
- if(run?.status==='running'||run?.status==='stopping')return make(run.status==='stopping'?'正在停止制作':run.pause_requested?'已请求暂停，等待当前步骤结束':`正在执行 ${label}`,run.status==='stopping'?'正在保存当前状态。':node==='F04'?`已完成 ${audioCompleted} / ${run.segments.length} 段配音，已完成部分累计 ${audioSeconds.toFixed(2)} 秒。全部段落会连续生成。`:`后台任务持续执行，对话回复结束后仍会继续。${run.target_node&&run.target_node!=='F12'?`本次执行到 ${run.target_node}。`:''}`,'running',undefined,true)
+ if(run?.status==='running'||run?.status==='stopping')return make(run.status==='stopping'?'正在停止制作':run.pause_requested?'已请求暂停，等待当前步骤结束':`正在执行 ${label}`,run.status==='stopping'?'正在保存当前状态。':rawNode==='F04'?(native?`声音和画面同步生成，已完成 ${run.segments.filter(s=>nodeStatus(state,`F04/${s.id}`)==='done').length} / ${run.segments.length} 段原声视频，可在人物视频节点直接预览。`:`已完成 ${audioCompleted} / ${run.segments.length} 段配音，已完成部分累计 ${audioSeconds.toFixed(2)} 秒。全部段落会连续生成。`):`后台任务持续执行，对话回复结束后仍会继续。${run.target_node&&run.target_node!=='F12'?`本次执行到 ${run.target_node}。`:''}`,'running',undefined,true)
  if(run?.status==='awaiting_confirmation'){
   if(run.confirmation==='shots')return make('等待你确认镜头','请在镜头审阅节点查看每一镜的有声融合预览，可单独检查人物和动效，修改满意后统一确认。','waiting','confirm')
   if(run.confirmation==='final')return make('等待你确认成片','完整播放成片，检查节奏、嘴型、字幕和声音。确认后进入成片交付。','waiting','confirm')
@@ -76,17 +83,17 @@ export function executionSummary(state:StudioState):ExecutionSummary{
   return make(ready?`全部 ${audioCompleted} 段配音已完成`:'配音内容尚未齐全',ready?`整片配音累计 ${audioSeconds.toFixed(2)} 秒。可先试听全部配音再确认，也可点击「直接继续制作」进入后续流程。只需对整批配音选择一次。`:`已完成 ${audioCompleted} / ${run.segments.length} 段，请刷新状态，全部完成后再继续。`,'waiting','confirm')
  }
  if(run?.status==='submission_unknown'){
-  if(rawNode==='F05'&&run.error?.includes('model_invalid_json'))return make('素材规划返回格式异常',`素材规划模型已返回内容，但 JSON 不完整或格式无效。视频和动效生成尚未开始。已完成配音已保留。${state.testing_mode?'点击「重新执行并继续」可使用分批规划重试。':'请检查模型输出记录后恢复。'}`,'error',state.testing_mode?'retry':'refresh')
+  if(rawNode==='F05'&&run.error?.includes('model_invalid_json'))return make('素材规划返回格式异常',`素材规划模型已返回内容，但 JSON 不完整或格式无效。${native?'已完成的原声视频已保留，后续素材和动效尚未完成。':'视频和动效生成尚未开始。已完成配音已保留。'}${state.testing_mode?'点击「重新执行并继续」可使用分批规划重试。':'请检查模型输出记录后恢复。'}`,'error',state.testing_mode?'retry':'refresh')
   if(state.testing_mode)return make(`请求异常 · ${label}`,`${run.error||'上次模型请求没有取得可继续的结果。'} 已完成内容已保留。点击「重新执行并继续」会重试失败步骤，并复用可用的已完成内容。`,'error','retry')
   return make('订单状态待核对',`${run.script_confirmed?'文案已确认。':''}${run.error||'供应商提交结果暂不明确。'} 请先核对供应商订单，当前不需要确认文案或配音。刷新只读取已记录状态，不会重新提交生成。`,'error','refresh')
  }
  if(state.proposal&&!state.proposal.applied)return make('修改方案等待确认','新方案尚未执行，核对后应用修改。','waiting','proposal')
  if(run?.status==='failed'&&state.audio_timing?.issue){
   const issue=state.audio_timing.issue
-  return make('配音时长读取异常',issue.message,'error','retry')
+  return make(native?'原声视频时长读取异常':'配音时长读取异常',issue.message,'error','retry')
  }
  if(run?.status==='failed'&&state.audio_timing?.resume_available)return make('时长限制已取消，可以继续制作',`已保留 ${state.audio_timing.completed} 段配音，累计 ${audioSeconds.toFixed(2)} 秒。点击「继续制作」将复用现有配音，进入配音确认流程，无需缩短文案。`,'waiting','retry')
- if(run?.status==='failed'||run?.status==='interrupted')return make(retry?.exhausted?`等待你处理 · ${label}`:run.status==='interrupted'?'制作已中断':rawNode==='F05'?'素材规划失败':`制作异常 · ${label}`,`${run.error||'当前任务未继续，请检查失败步骤后恢复运行。'}${retry?.exhausted?' 已携带错误原因自动重试 3 次，已停止。可先让 Agent 排查，再选择重试、调整或跳过步骤，或手动修改、让 AI 优化提示词。':''}${rawNode==='F05'?' 视频和动效生成尚未开始，已完成配音已保留。':''}`,'error',retry?.exhausted?'diagnose':'retry')
+ if(run?.status==='failed'||run?.status==='interrupted')return make(retry?.exhausted?`等待你处理 · ${label}`:run.status==='interrupted'?'制作已中断':rawNode==='F05'?'素材规划失败':`制作异常 · ${label}`,`${run.error||'当前任务未继续，请检查失败步骤后恢复运行。'}${retry?.exhausted?' 已携带错误原因自动重试 3 次，已停止。可先让 Agent 排查，再选择重试、调整或跳过步骤，或手动修改、让 AI 优化提示词。':''}${rawNode==='F05'?(native?' 已完成的原声视频已保留，后续素材和动效尚未完成。':' 视频和动效生成尚未开始，已完成配音已保留。'):''}`,'error',retry?.exhausted?'diagnose':'retry')
  if(run?.status==='paused'&&run.edits?.material_only&&run.target_node==='F08')return make('单个视频制作已暂停在汇总前','可继续微调各个视频。点击继续制作后，补齐待制作素材并统一汇总，进入镜头审阅。','waiting','resume')
  if(run?.status==='paused')return make('制作已暂停',run.pause_requested?'已按暂停请求停止后续步骤，可继续制作。':`已执行到本次指定步骤 ${run.target_node??node}，后续步骤尚未执行。`,'waiting','resume')
  if(run?.status==='stopped')return make('制作已停止','后续步骤不会继续。已完成内容已保留，可让 Agent 规划后续操作。','neutral','start')

@@ -1,5 +1,6 @@
 import type { ProjectNarrationConfig } from '@/shared/types'
 import { localAssetStorageService } from '@/shared/services/localAssetStorageService'
+import { cleanupDeletedProjectLocalData } from './projectLocalCleanup'
 // 项目管理服务层，封装所有项目相关的API调用
 import type {
   Project,
@@ -558,7 +559,7 @@ class ProjectService {
     const response = await this.request<MessageResponse>(`/api/v1/projects/${projectId}`, {
       method: 'DELETE',
     })
-
+    await cleanupDeletedProjectLocalData(projectId)
     return response
   }
 

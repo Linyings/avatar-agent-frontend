@@ -1,5 +1,5 @@
 import type {Edge,Viewport,XYPosition} from '@xyflow/react'
-import {artifactURL,assetURL,nodeArtifacts,nodeStatus,confirmationNode,type PackageInfo,type StudioState} from './studioService'
+import {artifactURL,assetURL,nodeArtifacts,nodeStatus,confirmationNode,nativeVideoArtifact,nativeVideoSteps,nativeVideoWorkflow,type PackageInfo,type StudioState} from './studioService'
 
 export const NODE_WIDTH=320
 export const NODE_HEIGHT=350
@@ -45,6 +45,17 @@ export function canvasPresentation(state:StudioState,p:PackageInfo):CanvasPresen
   const kind=a.media_type.startsWith('video/')?'video':a.media_type.startsWith('audio/')?'audio':a.media_type.startsWith('image/')?'image':null
   return kind?[{kind,url:artifactURL(run.id,a.id),name:a.name} as CanvasMedia]:[]
  })??[]
+ if(p.nativeSegmentId&&run){
+  const segment=run.segments.find(s=>s.id===p.nativeSegmentId)!
+  const need=run.needs.find(n=>n.id===p.materialId)
+  const artifact=nativeVideoArtifact(run,segment),steps=nativeVideoSteps(run,segment.id)
+  result.text=segment.text
+  result.media=artifact?[{kind:'video',url:artifactURL(run.id,artifact.id),name:artifact.name}]:[]
+  result.items=[segment.native_video?`原声视频 · ${segment.duration.toFixed(1)} 秒`:'Seedance 同步生成人物画面和声音，完成后可直接播放。',...steps.filter(s=>s.status==='running'&&s.production_phase).map(s=>s.production_phase!),...steps.filter(s=>s.error).map(s=>s.error!)]
+  if(need)result.prompt=need.prompt||segment.native_prompt||'按已保存的文案和导演稿生成人物视频。'
+  result.progress={completed:result.status==='done'?1:0,total:1}
+  return result
+ }
  if(p.materialId&&run){
   const need=run.needs.find(n=>n.id===p.materialId)!
   const segment=run.segments.find(s=>s.id===need.segment_id)
@@ -56,6 +67,12 @@ export function canvasPresentation(state:StudioState,p:PackageInfo):CanvasPresen
   return result
  }
  if(p.merge&&run){
+  if(nativeVideoWorkflow(state)&&!run.needs.length){
+   const completed=run.segments.filter(s=>nodeStatus(state,`F04/${s.id}`)==='done').length
+   result.text=`已完成 ${completed} / ${run.segments.length} 段原声视频，随后按实际时长规划素材、字幕与动效。`
+   result.progress={completed,total:run.segments.length}
+   return result
+  }
   const done=run.needs.filter(n=>run.materials.some(m=>m.need_id===n.id)&&run.steps.some(s=>s.id.endsWith('/'+n.id)&&s.status==='succeeded')).length
   result.text=`${done} / ${run.needs.length} 个视频就绪。所有节点的素材统一汇总后，交给下一步镜头审阅。`
   result.items=run.needs.map(n=>`${run.materials.some(m=>m.need_id===n.id)?'已就绪':'待制作'} · ${n.content}`)

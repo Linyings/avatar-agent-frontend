@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react'
 import {ActionIcon,Alert,Button,Textarea,TextInput} from '@mantine/core'
 import {IconX} from '@tabler/icons-react'
-import {artifactURL,materialAction,materialNodeID,nodeStatus,requestID,stateLabel,type MaterialDraft,type StudioState} from './studioService'
+import {artifactURL,materialAction,materialNodeID,displayMaterialNodeID,nativeVideoArtifact,nativeVideoSteps,nodeStatus,requestID,stateLabel,type MaterialDraft,type StudioState} from './studioService'
 import {ProtectedMedia} from './StudioShell'
 import styles from './Studio.module.css'
 
@@ -13,14 +13,15 @@ export default function MaterialNodeDetail({state,needId,onRefresh,onClose,onAss
  const [message,setMessage]=useState('');const [error,setError]=useState('')
  const [conflict,setConflict]=useState(false)
  const pending=useRef<{key:string;id:string}|undefined>(undefined)
- const node=materialNodeID(need),status=nodeStatus(state,node)
+ const node=materialNodeID(need),status=nodeStatus(state,displayMaterialNodeID(state,need))
  const active=['running','stopping','submission_unknown'].includes(run.status)
  const segment=run.segments.find(s=>s.id===need.segment_id)
- const steps=run.steps.filter(s=>s.id===node||s.id.startsWith(node+'-')||s.id.startsWith(node+'/'))
+ const nativeAvatar=run.input.speech_mode==='native-video'&&need.kind==='avatar'
+ const steps=nativeAvatar&&segment?nativeVideoSteps(run,segment.id):run.steps.filter(s=>s.id===node||s.id.startsWith(node+'-')||s.id.startsWith(node+'/'))
  const failed=steps.some(s=>s.status==='failed'),exhausted=steps.some(s=>s.status==='failed'&&s.retry?.exhausted)
  const material=run.materials.find(m=>m.need_id===needId)
- const artifact=run.artifacts.find(a=>a.id===`material-${needId}`)
- const phaseLabel=(id:string)=>id===node?'视频制作与组装':id===node+'/plan'?'场景方案':id.startsWith(node+'/scene-')?'场景 '+id.slice((node+'/scene-').length)+' 绘图代码':'人物片段 '+id.slice(node.length+1)
+ const artifact=nativeAvatar&&segment?nativeVideoArtifact(run,segment):run.artifacts.find(a=>a.id===`material-${needId}`)
+ const phaseLabel=(id:string)=>nativeAvatar&&id.startsWith('F04/')?(id===`F04/${segment?.id}`?'视频整理与字幕对齐':'Seedance 生成画面和声音'):id===node?(nativeAvatar?'人物素材接入':'视频制作与组装'):id===node+'/plan'?'场景方案':id.startsWith(node+'/scene-')?'场景 '+id.slice((node+'/scene-').length)+' 绘图代码':'人物片段 '+id.slice(node.length+1)
  const real=need.kind==='real'
  const dirty=prompt!==(draft?.prompt??need.prompt??'')
  const seenVersion=useRef(stored?.version)
@@ -38,16 +39,16 @@ export default function MaterialNodeDetail({state,needId,onRefresh,onClose,onAss
   try{
    const out=await materialAction(state.project.id,needId,{action,base_run_id:run.id,version:draft?.version??'',prompt,instruction,...(action==='generate'?{request_id:pending.current.id}:{})})
    if(out.draft){setDraft(out.draft);setPrompt(out.draft.prompt)}
-   if(action==='generate'){pending.current=undefined;setMessage('已提交此视频的制作。完成后可在汇总节点继续。')}
+   if(action==='generate'){pending.current=undefined;setMessage(nativeAvatar?'已提交原声人物更新。完成后将按新时长重新规划素材。':'已提交此视频的制作。完成后可在汇总节点继续。')}
    else setMessage(action==='save'?'提示词已保存，视频尚未重新生成。':'AI 已改写并保存草稿，检查后可重新生成此视频。')
    await onRefresh()
   }catch(e){setError((e as Error).message)}finally{lock.current=false;setBusy('')}
  }
  return <>
-  <div className={styles.inspectorTitle}><div><span className={styles.badge}>第 7 步 · {stateLabel(status)}</span><h2 style={{marginTop:12}}>{({avatar:'人物视频',animation:'专用动效',real:'实拍素材'} as Record<string,string>)[need.kind]} · {segment?.chapter||needId}</h2></div><ActionIcon aria-label="返回画布" variant="subtle" onClick={onClose}><IconX size={17}/></ActionIcon></div>
-  <div className={styles.panel}><h3>制作内容</h3><p>{need.content}</p>{segment&&<><p>{segment.start.toFixed(1)}–{(segment.start+segment.duration).toFixed(1)} 秒 · {segment.text}</p>{segment.audio&&<ProtectedMedia kind="audio" url={`/api/v1/agent/runs/${run.id}/segments/${segment.id}/audio`}/>}</>}
+  <div className={styles.inspectorTitle}><div><span className={styles.badge}>第 7 步 · {stateLabel(status)}</span><h2 style={{marginTop:12}}>{nativeAvatar?'数字人视频（含原声）':({avatar:'人物视频',animation:'专用动效',real:'实拍素材'} as Record<string,string>)[need.kind]} · {segment?.chapter||needId}</h2></div><ActionIcon aria-label="返回画布" variant="subtle" onClick={onClose}><IconX size={17}/></ActionIcon></div>
+  <div className={styles.panel}><h3>制作内容</h3><p>{need.content}</p>{segment&&<><p>{segment.start.toFixed(1)}–{(segment.start+segment.duration).toFixed(1)} 秒 · {segment.text}</p>{segment.audio&&!nativeAvatar&&<ProtectedMedia kind="audio" url={`/api/v1/agent/runs/${run.id}/segments/${segment.id}/audio`}/>}</>}
    {need.kind==='animation'&&<p>组装顺序：本段台词与配音 → 人物画面参考（如有）→ 场景方案 → 逐场景绘图代码 → 统一组装与视频渲染 → 素材汇总。</p>}
-   {need.kind==='avatar'&&<p>组装顺序：参考照片与配音 → 人物视频生成 → 段落拼接 → 素材汇总。</p>}
+   {need.kind==='avatar'&&<p>{nativeAvatar?'文案、人物参考及提示词 → Seedance 同时生成画面和声音 → 原声视频。后续字幕与动效按这段视频的实际时间制作。':'组装顺序：参考照片与配音 → 人物视频生成 → 段落拼接 → 素材汇总。'}</p>}
   </div>
   <div className={styles.panel}><h3>{material?'当前视频效果':'视频效果'}</h3>{artifact?<div className={styles.mediaPreview}><ProtectedMedia kind="video" url={artifactURL(run.id,artifact.id)} alt={need.content}/></div>:<p>{status==='running'?'正在制作，完成后自动显示可播放的视频。':'此节点的视频尚未就绪。'}</p>}
    {!!steps.length&&<ol className={styles.productionSteps}>{steps.map(s=><li key={s.id}><span>{phaseLabel(s.id)}</span><strong>{s.production_phase&&s.status==='running'?s.production_phase:stateLabel(s.status)}{s.cost_status==='reused'?' · 复用已有结果':''}</strong>{s.seconds>0&&<small>累计 {s.seconds.toFixed(1)} 秒{(s.attempt??0)>0?` · 第 ${s.attempt} 次`:''}</small>}{s.error&&<p role="status">{s.error}</p>}{s.retry&&s.status!=='succeeded'&&<><p>自动重试 {s.retry.automatic_retries}/3{s.retry.exhausted?' · 已停止自动重试':''}</p><p>修复方式：{s.retry.strategy}</p></>}{s.attempts?.some(a=>a.error)&&<details><summary>查看重试错误记录</summary>{s.attempts.filter(a=>a.error).map(a=><p key={a.number}>第 {a.number} 次：{a.error}</p>)}</details>}</li>)}</ol>}
@@ -62,7 +63,7 @@ export default function MaterialNodeDetail({state,needId,onRefresh,onClose,onAss
    {conflict&&<Alert mt="md" color="yellow">此节点有更新的草稿，当前输入已保留。<Button variant="subtle" size="xs" onClick={()=>{setDraft(stored);setPrompt(stored?.prompt??need.prompt??'');setConflict(false)}}>加载已保存草稿</Button></Alert>}
    <div className={styles.actionRow}><Button size="xs" className={styles.ghost} loading={busy==='save'} disabled={!!busy||conflict} onClick={()=>void act('save')}>保存提示词</Button><Button size="xs" className={styles.ghost} loading={busy==='improve'} disabled={!!busy||conflict} onClick={()=>void act('improve')}>让 AI 改写提示词</Button><Button size="xs" className={styles.primary} loading={busy==='generate'} disabled={!!busy||active||conflict} onClick={()=>void act('generate')}>重新生成此视频</Button></div>
    {active&&<p className={styles.subtle}>可先编辑并保存草稿；等待当前制作结束或暂停后再重新生成。</p>}
-   <p className={styles.subtle}>重新生成会创建新版本并调用生成服务。完成后可微调其他节点，再统一汇总。</p>
+   <p className={styles.subtle}>{nativeAvatar?'重新生成会同时更新本段声音和画面，再按新时长重做素材规划、字幕与动效。修改首段默认音色时，依赖它的后续段也会重新生成。':'重新生成会创建新版本并调用生成服务。完成后可微调其他节点，再统一汇总。'}</p>
   </>}
   {message&&<Alert mt="md" color="teal" role="status">{message}</Alert>}{error&&<Alert mt="md" color="red" role="alert">{error}</Alert>}
  </>
